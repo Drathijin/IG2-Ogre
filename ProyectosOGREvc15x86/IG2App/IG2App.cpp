@@ -15,16 +15,13 @@ bool IG2App::keyPressed(const OgreBites::KeyboardEvent& evt)
   }
   else if (evt.keysym.sym == SDLK_g)
   {
-	  mParent->roll(Ogre::Degree(18));
+	  mTotalParent->roll(Ogre::Degree(-1));
 
-	  mNeedles[0]->roll(Ogre::Degree(180));
-	  mNeedles[1]->roll(Ogre::Degree(90));
-	  mNeedles[2]->roll(Ogre::Degree(33.75));
 	  
   }
   else if (evt.keysym.sym == SDLK_h)
   {
-	  mParent->roll(Ogre::Degree(18));
+	  mSpheresParent->roll(Ogre::Degree(18));
 
   }
   //else if (evt.keysym.sym == SDLK_???)
@@ -137,32 +134,39 @@ void IG2App::setupScene(void)
 	  node->setScale(scale);
   };
 
- /* createEntity(mLower, "lower", "RomanBathLower.mesh");
+  createEntity(mLower, "lower", "RomanBathLower.mesh");
   createEntity(mUpper, "upper", "RomanBathUpper.mesh");
-  createEntity(mSinbad, "sinbad", "Sinbad.mesh", Vector3(20));*/
-  //mSinbad->setPosition(0, 20,0);
-  
-  const float inc = 360 / 12;
-  const int rad = 1000;
-  mParent = mSM->getRootSceneNode()->createChildSceneNode();
-  for (int i = 0; i < 12; i++)
-  {
-	  float radians = Ogre::Math::DegreesToRadians(i * inc);
-	  createEntity(mHours[i], "sphere" + std::to_string(i), "sphere.mesh", Vector3(1), mParent); 
-	  mHours[i]->setPosition(Ogre::Math::Cos(radians) * rad, Ogre::Math::Sin(radians) * rad, 0);
-  }
-  /*for (int i = 0; i < 6; i++)
-  {
-	  mSM->getSceneNode("sphere" + std::to_string(2*i))->setScale(Vector3(0.5));
-  }*/
-  for (int i = 0; i < 3; i++)
-  {
-	  createEntity(mNeedles[i], "needle" + std::to_string(i), "column.mesh", Vector3(2.5 / (i + 1), 2.5 / (i + 1), 1));
+  //createEntity(mSinbad, "sinbad", "Sinbad.mesh", Vector3(20));
+  createEntity(mSinbad, "dragon", "dragon.mesh", Vector3(0.75));
+  mSinbad->setPosition(0, 75,0);
+  mSinbad->yaw(Ogre::Degree(180));
+ // 
+ // const float inc = 360 / 12;
+ // const int rad = 1000;
 
-	  
-	  mNeedles[i]->roll(Ogre::Degree(-90 * i));
-  }
+ // //creamos un padre para todas las entidades
+ // mTotalParent = mSM->getRootSceneNode()->createChildSceneNode();
+ // //creamos un padre para las esferas de las horas, y lo hacemos hijo del padre total
+ // mSpheresParent = mTotalParent->createChildSceneNode("spheresParent");
+ // 
+	///*  node = (!parent) ? mSM->getRootSceneNode()->createChildSceneNode(id) : parent->createChildSceneNode(id);*/
 
+ // for (int i = 0; i < 12; i++)
+ // {
+	//  float radians = Ogre::Math::DegreesToRadians(i * inc);
+	//  createEntity(mHours[i], "sphere" + std::to_string(i), "sphere.mesh", Vector3(1), mSpheresParent); 
+	//  mHours[i]->setPosition(Ogre::Math::Cos(radians) * rad, Ogre::Math::Sin(radians) * rad, 0);
+ // }
+ // /*for (int i = 0; i < 6; i++)
+ // {
+	//  mSM->getSceneNode("sphere" + std::to_string(2*i))->setScale(Vector3(0.5));
+ // }*/
+ // for (int i = 0; i < 3; i++)
+ // {
+	//  createEntity(mNeedles[i], "needle" + std::to_string(i), "column.mesh", Vector3(2.5 / (i + 1), 2.5 / (i + 1), 1), mTotalParent);
+	//  mNeedles[i]->roll(Ogre::Degree(-90 * i));
+ // }
+ // mNeedles[2]->roll(Ogre::Degree(-45));
   //------------------------------------------------------------------------
 
   mCamMgr = new OgreBites::CameraMan(mCamNode);

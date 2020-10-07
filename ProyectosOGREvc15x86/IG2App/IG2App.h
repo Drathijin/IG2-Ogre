@@ -28,7 +28,8 @@ protected:
   Ogre::SceneNode* mLower = nullptr;
   Ogre::SceneNode* mSinbad = nullptr;
   Ogre::SceneNode* mUpper = nullptr;
-  Ogre::SceneNode* mParent = nullptr;
+  Ogre::SceneNode* mSpheresParent = nullptr;
+  Ogre::SceneNode* mTotalParent = nullptr;
   OgreBites::CameraMan* mCamMgr = nullptr;
   Ogre::SceneNode* mHours[12];
   Ogre::SceneNode* mNeedles[3];
