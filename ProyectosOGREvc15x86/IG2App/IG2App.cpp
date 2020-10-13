@@ -25,6 +25,10 @@ bool IG2App::keyPressed(const OgreBites::KeyboardEvent& evt)
 	  mSpheresParent->roll(Ogre::Degree(18));
 
   }
+  else if (evt.keysym.sym == SDLK_p)
+  {
+	  aspaNode->roll(Ogre::Degree(18));
+  }
   //else if (evt.keysym.sym == SDLK_???)
   
   return true;
@@ -114,6 +118,9 @@ void IG2App::setupScene(void)
   case 2:
 		startScene2(option);
 		break;
+  case 3:
+		startScene3(option);
+		break;
   default:
 	  break;
   }
@@ -138,7 +145,7 @@ void IG2App::createEntity(Ogre::SceneNode*& node, std::string id, std::string me
 	Ogre::Entity* ent = mSM->createEntity(mesh);
 	node = (!parent) ? mSM->getRootSceneNode()->createChildSceneNode(id) : parent->createChildSceneNode(id);
 	node->attachObject(ent);
-	node->setScale(scale);
+	node->scale(scale);
 }
 
 
@@ -213,4 +220,18 @@ void IG2App::startScene2(int op) {
 	mNeedles[2]->roll(Ogre::Degree(-45));
 	
 	mCamNode->setPosition(0, 0, 10000);
+}
+void IG2App::startScene3(int option)
+{
+	if (option == 0)
+	{
+		aspaNode = mSM->getRootSceneNode()->createChildSceneNode();
+		createEntity(cilindroNode, "adorno", "column.mesh", Vector3(4,1,4), aspaNode);
+		createEntity(tableroNode, "tablero", "cube.mesh", Vector3(5, 30, 1), aspaNode);
+		
+		cilindroNode->setPosition(-110, 1400, 10);
+		cilindroNode->roll(Ogre::Degree(-90));
+
+	}
+	
 };
