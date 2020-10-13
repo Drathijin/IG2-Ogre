@@ -16,9 +16,24 @@ bool IG2App::keyPressed(const OgreBites::KeyboardEvent& evt)
   }
   else if (evt.keysym.sym == SDLK_g)
   {
-	  mTotalParent->roll(Ogre::Degree(-1));
-
-	  
+	  //mTotalParent->roll(Ogre::Degree(-1));
+	  if (aspas)
+	  {
+		  aspas->roll(Ogre::Degree(1));
+		  for (int i = 0; i < numAspas; i++)
+			  cilindroNodes[i]->roll(Ogre::Degree(-1));
+	  }
+	  else if (aspasMolino && !hayArray)
+	  {
+		  aspasMolino->aspasNode->roll(Ogre::Degree(1));
+		  for (int i = 0; i < numAspas; i++)
+			mSM->getSceneNode("adorno_"+std::to_string(i))->roll(Ogre::Degree(-1));
+	  }
+	  else if(aspasMolino && hayArray){
+		  aspasMolino->aspasNode->roll(Ogre::Degree(1));
+		  for (int i = 0; i < numAspas; i++)
+			  aspasMolino->arrayAspas[i]->cilindroNode->roll(Ogre::Degree(-1));
+	  }
   }
   else if (evt.keysym.sym == SDLK_h)
   {
@@ -29,6 +44,7 @@ bool IG2App::keyPressed(const OgreBites::KeyboardEvent& evt)
   {
 	  aspaNode->roll(Ogre::Degree(18));
   }
+  
   //else if (evt.keysym.sym == SDLK_???)
   
   return true;
@@ -43,7 +59,6 @@ void IG2App::shutdown()
 
   delete mTrayMgr;  mTrayMgr = nullptr;
   delete mCamMgr; mCamMgr = nullptr;
-  
   // do not forget to call the base 
   IG2ApplicationContext::shutdown();
 }
@@ -103,10 +118,10 @@ void IG2App::setupScene(void)
   //mLightNode->setPosition(0, 0, 1000);
  
   //------------------------------------------------------------------------
-  int scene;
-  std::cin >> scene;
-  int option;
-  std::cin >> option;
+
+  int scene = 1;
+  int option = 1;
+  
   switch (scene)
   {
   case 0:
@@ -231,7 +246,90 @@ void IG2App::startScene3(int option)
 		
 		cilindroNode->setPosition(-110, 1400, 10);
 		cilindroNode->roll(Ogre::Degree(-90));
+	}
+	else if (option == 1)
+	{
+		float angle = 360 / numAspas;
+		
+		aspaContainer.reserve(numAspas);
+		tableroNodes.reserve(numAspas);
+		cilindroNodes.reserve(numAspas);
+		aspas = mSM->getRootSceneNode()->createChildSceneNode("padreDeAspas");
+		int scale = 1;
+		for (int i = 0; i < numAspas; i++)
+		{
+			aspaContainer[i] = aspas->createChildSceneNode("aspa_" + std::to_string(i));
+			createEntity(tableroNodes[i], "tablero_" +std::to_string(i), "cube.mesh", Vector3(.1, 1, .1), aspaContainer[i]);
+			createEntity(cilindroNodes[i], "adorno_"+std::to_string(i), "column.mesh", Vector3(0.05, 0.05, 0.05), aspaContainer[i]);
 
+			cilindroNodes[i]->setPosition(0, -100, 30);
+			tableroNodes[i]->setPosition(0, -60, 0);
+			cilindroNodes[i]->roll(Ogre::Degree(-angle*i));
+			aspaContainer[i]->roll(Ogre::Degree(angle*i));
+		}
+	}
+	else if (option == 2)
+	{
+		hayArray = false;
+		aspasMolino = new AspasMolino(mSM, numAspas, hayArray);
+	}
+	else if (option == 3)
+	{
+		hayArray = true;
+		aspasMolino = new AspasMolino(mSM, numAspas, hayArray);
+	}
+
+};
+
+int IG2App::Aspa::id = 0;
+IG2App::Aspa::Aspa(Ogre::SceneManager* sm, Ogre::SceneNode* parent)
+{
+	mSM = sm;
+	if (parent)
+	{
+		aspaNode = parent->createChildSceneNode("aspa_" + std::to_string(Aspa::id));
+	}
+	else
+	{
+		aspaNode = mSM->getRootSceneNode()->createChildSceneNode("aspa_" + std::to_string(Aspa::id));
 	}
 	
-};
+	tableroNode = aspaNode->createChildSceneNode("tablero_" + std::to_string(Aspa::id));
+	Ogre::Entity* ent = mSM->createEntity("cube.mesh");
+	tableroNode->attachObject(ent);
+	tableroNode->setScale(Vector3(.1, 1,.1));
+	tableroNode->setPosition(0, -60, 0);
+	cilindroNode = aspaNode->createChildSceneNode("adorno_" + std::to_string(Aspa::id));
+	ent = mSM->createEntity("column.mesh");
+	cilindroNode->attachObject(ent);
+	cilindroNode->setScale(Vector3(0.05));
+	cilindroNode->setPosition(Vector3(0, 0, 30));
+	cilindroNode->setPosition(0, -100, 30);
+	addID();
+}
+
+IG2App::AspasMolino::AspasMolino(Ogre::SceneManager* sm,int n, bool flag)
+{
+	mSM = sm;
+	numAspas = n;
+	aspasNode = sm->getRootSceneNode()->createChildSceneNode("aspasMolino");
+	if (!flag) 
+	{
+		for (int i = 0; i < numAspas; i++)
+		{
+			Aspa a = Aspa(mSM, aspasNode);
+			a.aspaNode->roll(Angle(i * (360 / numAspas)));
+			a.cilindroNode->roll(Angle(-i * (360 / numAspas)));
+		}
+	}
+	else 
+	{
+		arrayAspas = new IG2App::Aspa * [numAspas];
+		for (int i = 0; i < numAspas; i++)
+		{
+			arrayAspas[i] = new Aspa(mSM, aspasNode);
+			arrayAspas[i]->aspaNode->roll(Angle(i * (360 / numAspas)));
+			arrayAspas[i]->cilindroNode->roll(Angle(-i * (360 / numAspas)));
+		}
+	}
+}

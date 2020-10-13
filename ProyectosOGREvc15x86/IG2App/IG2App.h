@@ -41,10 +41,40 @@ protected:
   Ogre::SceneNode* mHours[12];
   Ogre::SceneNode* mNeedles[3];
     
+
+
   Ogre::SceneNode* aspaNode = nullptr;
   Ogre::SceneNode* tableroNode = nullptr;
   Ogre::SceneNode* cilindroNode = nullptr;
-  int apano = 0;
+  
+  Ogre::SceneNode* aspas = nullptr;
+  const int numAspas = 12; 
+  std::vector<Ogre::SceneNode*> aspaContainer;
+  std::vector<Ogre::SceneNode*> tableroNodes;
+  std::vector<Ogre::SceneNode*> cilindroNodes;
+
+  class Aspa;
+  class AspasMolino {
+  public:
+      AspasMolino(Ogre::SceneManager* sm, int n, bool flag);
+      int numAspas;
+      Ogre::SceneNode* aspasNode=nullptr;
+      Ogre::SceneManager* mSM;
+      IG2App::Aspa** arrayAspas = nullptr;
+
+  };
+  class Aspa {
+  public:
+      Aspa(Ogre::SceneManager* sm, Ogre::SceneNode* parent = nullptr);
+      Ogre::SceneManager* mSM = nullptr;
+      Ogre::SceneNode* aspaNode = nullptr;
+      Ogre::SceneNode* tableroNode = nullptr;
+      Ogre::SceneNode* cilindroNode = nullptr;
+      static int id;
+      static void addID() { id++; };
+  };
+  AspasMolino* aspasMolino = nullptr;
+  bool hayArray = false;
 };
 
 #endif
