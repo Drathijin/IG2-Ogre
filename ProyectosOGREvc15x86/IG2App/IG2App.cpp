@@ -4,6 +4,7 @@
 #include <OgreInput.h>
 #include <SDL_keycode.h>
 #include <OgreMeshManager.h>
+#include <iostream>
 
 using namespace Ogre;
 
@@ -95,78 +96,30 @@ void IG2App::setupScene(void)
   //mLightNode = mCamNode->createChildSceneNode("nLuz");
   mLightNode->attachObject(luz);
 
-  mLightNode->setDirection(Ogre::Vector3(-1, 0, 0));  //vec3.normalise();
   //mLightNode->setPosition(0, 0, 1000);
  
   //------------------------------------------------------------------------
-
-  // finally something to render
-
-  //Ogre::Entity* ent = mSM->createEntity("DamagedHelmet.mesh");
-  //Ogre::Entity* ent = mSM->createEntity("Sword.mesh");
-  //Ogre::Entity* ent = mSM->createEntity("facial.mesh");
-  /*Ogre::Entity* ent = mSM->createEntity("RomanBathLower.mesh");
-  Ogre::Entity* upper = mSM->createEntity("RomanBathUpper.mesh");
-  Ogre::Entity* sinbad = mSM->createEntity("Sinbad.mesh");
-
-  mLower = mSM->getRootSceneNode()->createChildSceneNode("nSinbad");
-  mLower->attachObject(ent);
-  mUpper = mSM->getRootSceneNode()->createChildSceneNode("upper");
-  mUpper->attachObject(upper);
-  mSinbad = mSM->getRootSceneNode()->createChildSceneNode("sinbad");
-  mSinbad->attachObject(sinbad);*/
-
-  //mSinbadNode->setPosition(400, 100, -300);
-  /*mLower->setScale(1,1,1);
-  mUpper->setScale(1,1,1);
-  mSinbad->setScale(20, 20, 20);*/
-
-  //mSinbad->setPosition(0, 20,0);
-  //mSinbadNode->yaw(Ogre::Degree(-45));
-  //mSinbadNode->showBoundingBox(true);
-  //mSinbadNode->setVisible(false);
-
-  auto createEntity = [&] (Ogre::SceneNode* &node, std::string id, std::string mesh, Vector3 scale = Vector3(1), Ogre::SceneNode* parent = nullptr)
+  int scene;
+  std::cin >> scene;
+  int option;
+  std::cin >> option;
+  switch (scene)
   {
-	  Ogre::Entity* ent = mSM->createEntity(mesh);
-	  node = (!parent) ? mSM->getRootSceneNode()->createChildSceneNode(id) : parent->createChildSceneNode(id);
-	  node->attachObject(ent);
-	  node->setScale(scale);
-  };
+  case 0:
+		startScene0(option);
+		break;
+  case 1:
+		startScene1(option);
+		break;
+  case 2:
+		startScene2(option);
+		break;
+  default:
+	  break;
+  }
 
-  createEntity(mLower, "lower", "RomanBathLower.mesh");
-  createEntity(mUpper, "upper", "RomanBathUpper.mesh");
-  //createEntity(mSinbad, "sinbad", "Sinbad.mesh", Vector3(20));
-  createEntity(mSinbad, "dragon", "dragon.mesh", Vector3(0.75));
-  mSinbad->setPosition(0, 75,0);
-  mSinbad->yaw(Ogre::Degree(180));
- // 
- // const float inc = 360 / 12;
- // const int rad = 1000;
+ 
 
- // //creamos un padre para todas las entidades
- // mTotalParent = mSM->getRootSceneNode()->createChildSceneNode();
- // //creamos un padre para las esferas de las horas, y lo hacemos hijo del padre total
- // mSpheresParent = mTotalParent->createChildSceneNode("spheresParent");
- // 
-	///*  node = (!parent) ? mSM->getRootSceneNode()->createChildSceneNode(id) : parent->createChildSceneNode(id);*/
-
- // for (int i = 0; i < 12; i++)
- // {
-	//  float radians = Ogre::Math::DegreesToRadians(i * inc);
-	//  createEntity(mHours[i], "sphere" + std::to_string(i), "sphere.mesh", Vector3(1), mSpheresParent); 
-	//  mHours[i]->setPosition(Ogre::Math::Cos(radians) * rad, Ogre::Math::Sin(radians) * rad, 0);
- // }
- // /*for (int i = 0; i < 6; i++)
- // {
-	//  mSM->getSceneNode("sphere" + std::to_string(2*i))->setScale(Vector3(0.5));
- // }*/
- // for (int i = 0; i < 3; i++)
- // {
-	//  createEntity(mNeedles[i], "needle" + std::to_string(i), "column.mesh", Vector3(2.5 / (i + 1), 2.5 / (i + 1), 1), mTotalParent);
-	//  mNeedles[i]->roll(Ogre::Degree(-90 * i));
- // }
- // mNeedles[2]->roll(Ogre::Degree(-45));
   //------------------------------------------------------------------------
 
   mCamMgr = new OgreBites::CameraMan(mCamNode);
@@ -180,3 +133,84 @@ void IG2App::setupScene(void)
 
 }
 
+void IG2App::createEntity(Ogre::SceneNode*& node, std::string id, std::string mesh, Ogre::Vector3 scale, Ogre::SceneNode* parent)
+{
+	Ogre::Entity* ent = mSM->createEntity(mesh);
+	node = (!parent) ? mSM->getRootSceneNode()->createChildSceneNode(id) : parent->createChildSceneNode(id);
+	node->attachObject(ent);
+	node->setScale(scale);
+}
+
+
+void IG2App::startScene0(int option) {
+	std::string mesh;
+	switch (option)
+	{
+	case 0:
+		mesh = "DamagedHelmet.mesh";
+		mCamNode->setPosition(0, 0, 100);
+		break;
+
+	case 1:
+		mesh = "Sword.mesh";
+		mCamNode->setPosition(0, 0, 25);
+		mLightNode->setDirection(Ogre::Vector3(-1, 0, 0));  //vec3.normalise();
+		break;
+
+	case 2:
+		mLightNode->setDirection(Ogre::Vector3(0, 1, 0));  //vec3.normalise();
+		mCamNode->setPosition(0, 200, 100);
+		mesh = "facial.mesh";
+		break;
+	default:
+		break;
+	}
+	Ogre::Entity* ent = mSM->createEntity(mesh);
+	mSinbad = mSM->getRootSceneNode()->createChildSceneNode("sinbad");
+	mSinbad->setPosition(0, 0, 0);
+	mSinbad->attachObject(ent);
+
+};
+void IG2App::startScene1(int option) {
+	createEntity(mLower, "lower", "RomanBathLower.mesh");
+	createEntity(mUpper, "upper", "RomanBathUpper.mesh");
+	if (option == 0)
+	{
+		createEntity(mSinbad, "dragon", "dragon.mesh", Vector3(0.75));
+		mSinbad->setPosition(0, 75, 0);
+		mSinbad->yaw(Ogre::Degree(180));
+	}
+	else if (option == 1)
+	{
+
+		createEntity(mSinbad, "sinbad", "Sinbad.mesh", Vector3(20));
+		mSinbad->setPosition(0, 20, 0);
+	}
+
+};
+void IG2App::startScene2(int op) {
+
+	const float inc = 360 / 12;
+	const int rad = 1000;
+
+	//creamos un padre para todas las entidades
+	mTotalParent = mSM->getRootSceneNode()->createChildSceneNode();
+	//creamos un padre para las esferas de las horas, y lo hacemos hijo del padre total
+	mSpheresParent = mTotalParent->createChildSceneNode("spheresParent");
+
+
+	for (int i = 0; i < 12; i++)
+	{
+		float radians = Ogre::Math::DegreesToRadians(i * inc);
+		createEntity(mHours[i], "sphere" + std::to_string(i), "sphere.mesh", Vector3(1), mSpheresParent);
+		mHours[i]->setPosition(Ogre::Math::Cos(radians) * rad, Ogre::Math::Sin(radians) * rad, 0);
+	}
+	for (int i = 0; i < 3; i++)
+	{
+		createEntity(mNeedles[i], "needle" + std::to_string(i), "column.mesh", Vector3(2.5 / (i + 1), 2.5 / (i + 1), 1), mTotalParent);
+		mNeedles[i]->roll(Ogre::Degree(-90 * i));
+	}
+	mNeedles[2]->roll(Ogre::Degree(-45));
+	
+	mCamNode->setPosition(0, 0, 10000);
+};

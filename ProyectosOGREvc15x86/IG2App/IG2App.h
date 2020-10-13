@@ -18,6 +18,11 @@ protected:
   virtual void setup();
   virtual void shutdown();
   virtual void setupScene();
+  virtual void createEntity(Ogre::SceneNode*& node, std::string id, std::string mesh, Ogre::Vector3 scale = Ogre::Vector3(1), Ogre::SceneNode* parent = nullptr);
+
+  virtual void startScene0(int option = 0);
+  virtual void startScene1(int option = 0);
+  virtual void startScene2(int option=0);
 
   virtual bool keyPressed(const OgreBites::KeyboardEvent& evt);  // InputListener
       
