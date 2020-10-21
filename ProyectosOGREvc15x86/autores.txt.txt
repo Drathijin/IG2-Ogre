@@ -1,0 +1,4 @@
+Ricardo Sulbarán
+Ana Martín
+
+Cambiar el entero Opción (en la línea 127 de IG2App) para mostrar los diferentes enunciados.

@@ -118,8 +118,14 @@ void IG2App::setupScene(void)
   //mLightNode->setPosition(0, 0, 1000);
  
   //------------------------------------------------------------------------
-
-  int scene = 1;
+  /*
+	La escena 3 es la practica 1.1
+		-Opción 0 es un aspa sola
+		-Opción 1 son las aspas hechas a mano
+		-Opción 2 son las aspas con un nivel de abstración
+		-Opción 3 son las aspas en el array Aspas**
+  */
+  int scene = 3;
   int option = 1;
   
   switch (scene)
@@ -260,9 +266,9 @@ void IG2App::startScene3(int option)
 		{
 			aspaContainer[i] = aspas->createChildSceneNode("aspa_" + std::to_string(i));
 			createEntity(tableroNodes[i], "tablero_" +std::to_string(i), "cube.mesh", Vector3(.1, 1, .1), aspaContainer[i]);
-			createEntity(cilindroNodes[i], "adorno_"+std::to_string(i), "column.mesh", Vector3(0.05, 0.05, 0.05), aspaContainer[i]);
+			createEntity(cilindroNodes[i], "adorno_"+std::to_string(i), "Barrel.mesh", Vector3(1, 1, 1), aspaContainer[i]);
 
-			cilindroNodes[i]->setPosition(0, -100, 30);
+			cilindroNodes[i]->setPosition(0, -100, 10);
 			tableroNodes[i]->setPosition(0, -60, 0);
 			cilindroNodes[i]->roll(Ogre::Degree(-angle*i));
 			aspaContainer[i]->roll(Ogre::Degree(angle*i));
@@ -300,11 +306,10 @@ IG2App::Aspa::Aspa(Ogre::SceneManager* sm, Ogre::SceneNode* parent)
 	tableroNode->setScale(Vector3(.1, 1,.1));
 	tableroNode->setPosition(0, -60, 0);
 	cilindroNode = aspaNode->createChildSceneNode("adorno_" + std::to_string(Aspa::id));
-	ent = mSM->createEntity("column.mesh");
+	ent = mSM->createEntity("Barrel.mesh");
 	cilindroNode->attachObject(ent);
-	cilindroNode->setScale(Vector3(0.05));
-	cilindroNode->setPosition(Vector3(0, 0, 30));
-	cilindroNode->setPosition(0, -100, 30);
+	cilindroNode->setPosition(Vector3(0, 0, 5));
+	cilindroNode->setPosition(0, -100, 10);
 	addID();
 }
 
@@ -313,6 +318,8 @@ IG2App::AspasMolino::AspasMolino(Ogre::SceneManager* sm,int n, bool flag)
 	mSM = sm;
 	numAspas = n;
 	aspasNode = sm->getRootSceneNode()->createChildSceneNode("aspasMolino");
+
+	//Para el enunciado 4 5 6
 	if (!flag) 
 	{
 		for (int i = 0; i < numAspas; i++)
@@ -322,6 +329,7 @@ IG2App::AspasMolino::AspasMolino(Ogre::SceneManager* sm,int n, bool flag)
 			a.cilindroNode->roll(Angle(-i * (360 / numAspas)));
 		}
 	}
+	//Para el enunciado 7 8 
 	else 
 	{
 		arrayAspas = new IG2App::Aspa * [numAspas];
