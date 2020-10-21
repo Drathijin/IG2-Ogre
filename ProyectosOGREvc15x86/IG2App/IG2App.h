@@ -7,6 +7,11 @@
 #include <OgreTrays.h>
 #include <OgreCameraMan.h>
 
+namespace helpers {
+    Ogre::SceneNode* createEntity(Ogre::SceneManager* sm, Ogre::SceneNode*& node, std::string id, std::string mesh, Ogre::SceneNode* parent = nullptr);
+}
+
+
 
 class IG2App : public  OgreBites::IG2ApplicationContext, OgreBites::InputListener 
 {
@@ -18,8 +23,10 @@ protected:
   virtual void setup();
   virtual void shutdown();
   virtual void setupScene();
-  virtual void createEntity(Ogre::SceneNode*& node, std::string id, std::string mesh, Ogre::Vector3 scale = Ogre::Vector3(1), Ogre::SceneNode* parent = nullptr);
-
+  Ogre::SceneNode* createEntity(Ogre::SceneNode*& node, std::string id, std::string mesh, Ogre::SceneNode* parent = nullptr)
+  {
+      return helpers::createEntity(mSM, node, id, mesh, parent);
+  }
   virtual void startScene0(int option = 0); //Casco, espada y cara
   virtual void startScene1(int option = 0); //Dragón o Sinbad
   virtual void startScene2(int option = 0); //Reloj AKA agujitas
@@ -55,9 +62,9 @@ protected:
   std::vector<Ogre::SceneNode*> cilindroNodes;
 
   class Aspa;
-  class AspasMolino {
+  class AspasMolino  {
   public:
-      AspasMolino(Ogre::SceneManager* sm, int n, bool flag);
+      AspasMolino(Ogre::SceneManager* sm, int n, bool flag, Ogre::SceneNode* parent=nullptr);
       int numAspas;
       Ogre::SceneNode* aspasNode=nullptr;
       Ogre::SceneManager* mSM;
@@ -75,17 +82,26 @@ protected:
       static void addID() { id++; };
   };
 
-  class Molino {
+  friend class Molino;
+  class Molino : OgreBites::InputListener {
   public:
       Molino(Ogre::SceneManager* sm, int n);
       Ogre::SceneManager* mSM = nullptr;
       Ogre::SceneNode* mNode = nullptr;
       Ogre::SceneNode* esferaNode = nullptr;
       Ogre::SceneNode* cilindroNode = nullptr;
+      Ogre::SceneNode* botoncicoNode = nullptr;
       AspasMolino* aspas = nullptr;
+      Ogre::SceneNode* aspasParent = nullptr;
   };
   AspasMolino* aspasMolino = nullptr;
   bool hayArray = false;
+  Molino* molino = nullptr;
+  
+  Ogre::SceneNode* planets = nullptr;
+  Ogre::SceneNode* tierraNode = nullptr;
+  Ogre::SceneNode* lunaNode = nullptr;
+  Ogre::SceneNode* solNode= nullptr;
 };
 
 
