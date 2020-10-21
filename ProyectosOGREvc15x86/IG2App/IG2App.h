@@ -24,7 +24,8 @@ protected:
   virtual void startScene1(int option = 0); //Dragón o Sinbad
   virtual void startScene2(int option = 0); //Reloj AKA agujitas
 
-  virtual void startScene3(int option=0);   //Molino
+  virtual void startScene3(int option = 0);   //Molino
+  virtual void startScene4(int option=0);   //Molino entero
 
   virtual bool keyPressed(const OgreBites::KeyboardEvent& evt);  // InputListener
       
@@ -73,8 +74,19 @@ protected:
       static int id;
       static void addID() { id++; };
   };
+
+  class Molino {
+  public:
+      Molino(Ogre::SceneManager* sm, int n);
+      Ogre::SceneManager* mSM = nullptr;
+      Ogre::SceneNode* mNode = nullptr;
+      Ogre::SceneNode* esferaNode = nullptr;
+      Ogre::SceneNode* cilindroNode = nullptr;
+      AspasMolino* aspas = nullptr;
+  };
   AspasMolino* aspasMolino = nullptr;
   bool hayArray = false;
 };
+
 
 #endif

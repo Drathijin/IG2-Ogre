@@ -241,16 +241,16 @@ void IG2App::startScene3(int option)
 	if (option == 0)
 	{
 		aspaNode = mSM->getRootSceneNode()->createChildSceneNode();
-		createEntity(cilindroNode, "adorno", "column.mesh", Vector3(4,1,4), aspaNode);
+		createEntity(cilindroNode, "adorno", "column.mesh", Vector3(4, 1, 4), aspaNode);
 		createEntity(tableroNode, "tablero", "cube.mesh", Vector3(5, 30, 1), aspaNode);
-		
+
 		cilindroNode->setPosition(-110, 1400, 10);
 		cilindroNode->roll(Ogre::Degree(-90));
 	}
 	else if (option == 1)
 	{
 		float angle = 360 / numAspas;
-		
+
 		aspaContainer.reserve(numAspas);
 		tableroNodes.reserve(numAspas);
 		cilindroNodes.reserve(numAspas);
@@ -259,13 +259,13 @@ void IG2App::startScene3(int option)
 		for (int i = 0; i < numAspas; i++)
 		{
 			aspaContainer[i] = aspas->createChildSceneNode("aspa_" + std::to_string(i));
-			createEntity(tableroNodes[i], "tablero_" +std::to_string(i), "cube.mesh", Vector3(.1, 1, .1), aspaContainer[i]);
-			createEntity(cilindroNodes[i], "adorno_"+std::to_string(i), "column.mesh", Vector3(0.05, 0.05, 0.05), aspaContainer[i]);
+			createEntity(tableroNodes[i], "tablero_" + std::to_string(i), "cube.mesh", Vector3(.1, 1, .1), aspaContainer[i]);
+			createEntity(cilindroNodes[i], "adorno_" + std::to_string(i), "column.mesh", Vector3(0.05, 0.05, 0.05), aspaContainer[i]);
 
 			cilindroNodes[i]->setPosition(0, -100, 30);
 			tableroNodes[i]->setPosition(0, -60, 0);
-			cilindroNodes[i]->roll(Ogre::Degree(-angle*i));
-			aspaContainer[i]->roll(Ogre::Degree(angle*i));
+			cilindroNodes[i]->roll(Ogre::Degree(-angle * i));
+			aspaContainer[i]->roll(Ogre::Degree(angle * i));
 		}
 	}
 	else if (option == 2)
@@ -277,6 +277,23 @@ void IG2App::startScene3(int option)
 	{
 		hayArray = true;
 		aspasMolino = new AspasMolino(mSM, numAspas, hayArray);
+	}
+
+};
+
+void IG2App::startScene4(int option)
+{
+	if (option == 0)
+	{
+	}
+	else if (option == 1)
+	{
+	}
+	else if (option == 2)
+	{
+	}
+	else if (option == 3)
+	{
 	}
 
 };
@@ -332,4 +349,15 @@ IG2App::AspasMolino::AspasMolino(Ogre::SceneManager* sm,int n, bool flag)
 			arrayAspas[i]->cilindroNode->roll(Angle(-i * (360 / numAspas)));
 		}
 	}
+}
+
+IG2App::Molino::Molino(Ogre::SceneManager* sm, int n)
+{
+	mSM = sm;
+	mNode = mSM->getRootSceneNode()->createChildSceneNode();
+	createEntity(cilindroNode, "paredes", "column.mesh", Vector3(1), mNode);
+	createEntity(esferaNode, "techo", "sphere.mesh");
+
+	//no se si poner true o false porque no se para que era el flag ¬¬
+	//aspasMolino = AspasMolino(sm, n, true);
 }
