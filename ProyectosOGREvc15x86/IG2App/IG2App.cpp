@@ -1,4 +1,4 @@
-#include "IG2App.h"
+ï»¿#include "IG2App.h"
 
 #include <OgreEntity.h>
 #include <OgreInput.h>
@@ -8,12 +8,12 @@
 
 using namespace Ogre;
 
-Ogre::SceneNode* helpers::createEntity(Ogre::SceneManager* sm, Ogre::SceneNode*& node, std::string id, std::string mesh, Ogre::SceneNode* parent)
+Nodo* helpers::createEntity(Ogre::SceneManager* sm, Nodo*& Node, std::string id, std::string mesh, Nodo* parent)
 {
 	Ogre::Entity* ent = sm->createEntity(mesh);
-	node = (!parent) ? sm->getRootSceneNode()->createChildSceneNode(id) : parent->createChildSceneNode(id);
-	node->attachObject(ent);
-	return node;
+	Node = (!parent) ? sm->getRootSceneNode()->createChildSceneNode(id) : parent->createChildSceneNode(id);
+	Node->attachObject(ent);
+	return Node;
 }
 
 bool IG2App::keyPressed(const OgreBites::KeyboardEvent& evt)
@@ -36,7 +36,7 @@ bool IG2App::keyPressed(const OgreBites::KeyboardEvent& evt)
 		  molino->aspas->aspasNode->roll(Ogre::Degree(1));
 		  for (int i = 0; i < molino->aspas->numAspas; i++)
 			mSM->getSceneNode("adorno_"+std::to_string(i))->roll(Ogre::Degree(-1));
-		  molino->botoncicoNode->yaw(Ogre::Degree(1));
+		  molino->aspas->botoncicoNode->yaw(Ogre::Degree(1));
 	  }
 	  else if (aspasMolino && !hayArray)
 	  {
@@ -49,7 +49,12 @@ bool IG2App::keyPressed(const OgreBites::KeyboardEvent& evt)
 		  for (int i = 0; i < numAspas; i++)
 			  aspasMolino->arrayAspas[i]->cilindroNode->roll(Ogre::Degree(-1));
 	  }
+	  else if (avion)
+	  {
+		  avion->rotateHelices(20);
+	  }
   }
+  
   else if (evt.keysym.sym == SDLK_h)
   {
 	  if(molino)
@@ -83,7 +88,7 @@ bool IG2App::keyPressed(const OgreBites::KeyboardEvent& evt)
   {
 	if(molino)
 	{
-		  molino->botoncicoNode->translate(Vector3(0, 0, -50));
+		  molino->aspas->botoncicoNode->translate(Vector3(0, 0, -50));
 	}
   }
   
@@ -162,15 +167,15 @@ void IG2App::setupScene(void)
   //------------------------------------------------------------------------
   /*
 	La escena 3 es la practica 1.1
-		-Opción 0 es un aspa sola
-		-Opción 1 son las aspas hechas a mano
-		-Opción 2 son las aspas con un nivel de abstración
-		-Opción 3 son las aspas en el array Aspas**
+		-OpciÃ³n 0 es un aspa sola
+		-OpciÃ³n 1 son las aspas hechas a mano
+		-OpciÃ³n 2 son las aspas con un nivel de abstraciÃ³n
+		-OpciÃ³n 3 son las aspas en el array Aspas**
   */
   constexpr int scene = 4;
-  constexpr int option = 1;
+  int option = 2;
   
-  //std::cin >> option;
+  std::cin >> option;
   switch (scene)
   {
   case 0:
@@ -315,12 +320,12 @@ void IG2App::startScene3(int option)
 	else if (option == 2)
 	{
 		hayArray = false;
-		aspasMolino = new AspasMolino(mSM, numAspas, hayArray);
+		aspasMolino = new AspasMolino(mSM, numAspas, hayArray,mSM->getRootSceneNode()->createChildSceneNode());
 	}
 	else if (option == 3)
 	{
 		hayArray = true;
-		aspasMolino = new AspasMolino(mSM, numAspas, hayArray);
+		aspasMolino = new AspasMolino(mSM, numAspas, hayArray, mSM->getRootSceneNode()->createChildSceneNode());
 	}
 
 };
@@ -329,7 +334,7 @@ void IG2App::startScene4(int option)
 {
 	if (option == 0)
 	{
-		molino = new Molino(mSM, 12);
+		molino = new Molino(mSM, 12, mSM->getRootSceneNode()->createChildSceneNode());
 	}
 	else if (option == 1)
 	{
@@ -341,13 +346,16 @@ void IG2App::startScene4(int option)
 		
 		helpers::createEntity(mSM, lunaNode, "luna", "sphere.mesh", tierraNode)->setPosition({-150,0,0});
 		lunaNode->setScale({ 0.1,0.1,0.1 });
-		
+	}
+	else if (option == 2)
+	{
+		avion = new Avion(mSM,mSM->getRootSceneNode()->createChildSceneNode(), this);
 	}
 
 };
 
 int IG2App::Aspa::id = 0;
-IG2App::Aspa::Aspa(Ogre::SceneManager* sm, Ogre::SceneNode* parent)
+IG2App::Aspa::Aspa(Ogre::SceneManager* sm, Nodo* parent)
 {
 	mSM = sm;
 	if (parent)
@@ -370,14 +378,14 @@ IG2App::Aspa::Aspa(Ogre::SceneManager* sm, Ogre::SceneNode* parent)
 	cilindroNode->setPosition(0, -100, 5);
 	addID();
 }
-
-IG2App::AspasMolino::AspasMolino(Ogre::SceneManager* sm,int n, bool saveInArray, Ogre::SceneNode* parent) 
+int IG2App::AspasMolino::count = 0;
+IG2App::AspasMolino::AspasMolino(Ogre::SceneManager* sm,int n, bool saveInArray, Nodo* parent) 
 {
 	mSM = sm;
 	numAspas = n;
+	std::string name = "aspasMolino" + AspasMolino::count;
 	aspasNode = (!parent) ? 
-		sm->getRootSceneNode()->createChildSceneNode("aspasMolino") : parent->createChildSceneNode("aspasMolino");
-	
+		sm->getRootSceneNode()->createChildSceneNode(name) : parent->createChildSceneNode(name);	
 	//Para el enunciado 4 5 6
 	if (!saveInArray) 
 	{
@@ -399,25 +407,67 @@ IG2App::AspasMolino::AspasMolino(Ogre::SceneManager* sm,int n, bool saveInArray,
 			arrayAspas[i]->cilindroNode->roll(Angle(-i * (360 / numAspas)));
 		}
 	}
+	helpers::createEntity(mSM, botoncicoNode, "boton"+AspasMolino::count, "Barrel.mesh", parent)->pitch(Ogre::Degree(90));
+	botoncicoNode->scale({ 5, 1.5, 5 });
+	botoncicoNode->setPosition({ 0, 0, 10 });//ok
+	AspasMolino::count++;	
 }
 
 
-IG2App::Molino::Molino(Ogre::SceneManager* sm, int n)
+IG2App::Molino::Molino(Ogre::SceneManager* sm, int n, Nodo* parent)
 {
 	mSM = sm;
-	mNode = mSM->getRootSceneNode()->createChildSceneNode();
+	mNode = parent;
 	aspasParent = mNode->createChildSceneNode();
 	helpers::createEntity(mSM, cilindroNode, "paredes", "Barrel.mesh", mNode)->scale({10.5,45,10.5});
 	cilindroNode->setPosition({0,0,0});
 
-	helpers::createEntity(mSM, botoncicoNode, "boton", "Barrel.mesh", aspasParent)->pitch(Ogre::Degree(90));
-	botoncicoNode->scale({ 5, 1.5, 5});
-	botoncicoNode->setPosition({ 0, 125, 40 });
+;
 
 	helpers::createEntity(mSM, esferaNode, "techo", "sphere.mesh")->scale(Vector3(0.28));
 	esferaNode->setPosition({0,130,0});
 	
 	
 	aspas = new AspasMolino(sm, n, true, aspasParent);
-	aspas->aspasNode->setPosition(0, 125, 34);
+	
+	aspasParent->setPosition(0, 125, 34);
+}
+
+IG2App::Avion::Avion(Ogre::SceneManager* sm,Nodo* parent, IG2App* app)
+{
+	mNode = parent->createChildSceneNode();
+	helpers::createEntity(sm, mCuerpoNode, "AvionCuerpo", "sphere.mesh", mNode);
+	float scale = 2.5;
+	float offset = 200;
+
+	helpers::createEntity(sm, malaINode, "AvionAlaI", "cube.mesh", mNode);
+	malaINode->scale({ scale,0.1,1 });
+	malaINode->translate({ offset,0,0 });
+	heliceNodeL = mNode->createChildSceneNode();
+	AspasMolino* a = new AspasMolino(sm, 5, 1, heliceNodeL);
+	heliceNodeL->translate({ offset,0,50 });
+
+
+	helpers::createEntity(sm, malaDNode, "AvionAlaD", "cube.mesh", mNode);
+	malaDNode->scale({ scale,0.1,1 });
+	malaDNode->translate({ -offset,0,0 });
+	heliceNodeR = mNode->createChildSceneNode();
+	AspasMolino* b=new AspasMolino(sm, 5, 1, heliceNodeR);
+	heliceNodeR->translate({ -offset,0,50 });
+
+	helpers::createEntity(sm, botoncico, "boton879879754321", "Barrel.mesh", mNode)->pitch(Ogre::Degree(90));
+	botoncico->translate({ 0,0,100 });
+	botoncico->scale({10,2,10 });
+
+	helpers::createEntity(sm, pilotoNode, "piloto", "ninja.mesh", mNode);
+	pilotoNode->translate({ 0,-30,-15 }); 
+	pilotoNode->yaw(Ogre::Degree(180));
+	
+}
+
+void IG2App::Avion::rotateHelices(float dg)
+{
+	heliceNodeL->roll(Ogre::Degree(-dg), Ogre::Node::TS_PARENT);
+	heliceNodeR->roll(Ogre::Degree(-dg), Ogre::Node::TS_PARENT);
+
 }

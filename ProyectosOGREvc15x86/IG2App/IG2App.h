@@ -7,14 +7,16 @@
 #include <OgreTrays.h>
 #include <OgreCameraMan.h>
 
+using Nodo = Ogre::SceneNode;
 namespace helpers {
-    Ogre::SceneNode* createEntity(Ogre::SceneManager* sm, Ogre::SceneNode*& node, std::string id, std::string mesh, Ogre::SceneNode* parent = nullptr);
+    Nodo* createEntity(Ogre::SceneManager* sm, Nodo*& Node, std::string id, std::string mesh, Nodo* parent = nullptr);
 }
 
 
 
 class IG2App : public  OgreBites::IG2ApplicationContext, OgreBites::InputListener 
 {
+
 public:
   explicit IG2App() : IG2ApplicationContext("IG2App") { };  // new -> setup()  
   virtual ~IG2App() { };   // delete -> shutdown()  
@@ -23,9 +25,9 @@ protected:
   virtual void setup();
   virtual void shutdown();
   virtual void setupScene();
-  Ogre::SceneNode* createEntity(Ogre::SceneNode*& node, std::string id, std::string mesh, Ogre::SceneNode* parent = nullptr)
+  Nodo* createEntity(Nodo*& Node, std::string id, std::string mesh, Nodo* parent = nullptr)
   {
-      return helpers::createEntity(mSM, node, id, mesh, parent);
+      return helpers::createEntity(mSM, Node, id, mesh, parent);
   }
   virtual void startScene0(int option = 0); //Casco, espada y cara
   virtual void startScene1(int option = 0); //Dragón o Sinbad
@@ -35,49 +37,50 @@ protected:
   virtual void startScene4(int option=0);   //Molino entero
 
   virtual bool keyPressed(const OgreBites::KeyboardEvent& evt);  // InputListener
-      
+  bool flag = false;
   Ogre::SceneManager* mSM = nullptr;
   OgreBites::TrayManager* mTrayMgr = nullptr;    
-  Ogre::SceneNode* mLightNode = nullptr;
-  Ogre::SceneNode* mCamNode = nullptr;
-  Ogre::SceneNode* mLower = nullptr;
-  Ogre::SceneNode* mSinbad = nullptr;
-  Ogre::SceneNode* mUpper = nullptr;
-  Ogre::SceneNode* mSpheresParent = nullptr;
-  Ogre::SceneNode* mTotalParent = nullptr;
+  Nodo* mLightNode = nullptr;
+  Nodo* mCamNode = nullptr;
+  Nodo* mLower = nullptr;
+  Nodo* mSinbad = nullptr;
+  Nodo* mUpper = nullptr;
+  Nodo* mSpheresParent = nullptr;
+  Nodo* mTotalParent = nullptr;
   OgreBites::CameraMan* mCamMgr = nullptr;
-  Ogre::SceneNode* mHours[12];
-  Ogre::SceneNode* mNeedles[3];
+  Nodo* mHours[12];
+  Nodo* mNeedles[3];
     
 
 
-  Ogre::SceneNode* aspaNode = nullptr;
-  Ogre::SceneNode* tableroNode = nullptr;
-  Ogre::SceneNode* cilindroNode = nullptr;
+  Nodo* aspaNode = nullptr;
+  Nodo* tableroNode = nullptr;
+  Nodo* cilindroNode = nullptr;
   
-  Ogre::SceneNode* aspas = nullptr;
+  Nodo* aspas = nullptr;
   const int numAspas = 12; 
-  std::vector<Ogre::SceneNode*> aspaContainer;
-  std::vector<Ogre::SceneNode*> tableroNodes;
-  std::vector<Ogre::SceneNode*> cilindroNodes;
+  std::vector<Nodo*> aspaContainer;
+  std::vector<Nodo*> tableroNodes;
+  std::vector<Nodo*> cilindroNodes;
 
   class Aspa;
   class AspasMolino  {
   public:
-      AspasMolino(Ogre::SceneManager* sm, int n, bool flag, Ogre::SceneNode* parent=nullptr);
+      AspasMolino(Ogre::SceneManager* sm, int n, bool flag, Nodo* parent=nullptr);
       int numAspas;
-      Ogre::SceneNode* aspasNode=nullptr;
+      Nodo* aspasNode=nullptr;
       Ogre::SceneManager* mSM;
       IG2App::Aspa** arrayAspas = nullptr;
-
+       static int count;
+       Nodo* botoncicoNode = nullptr;
   };
   class Aspa {
   public:
-      Aspa(Ogre::SceneManager* sm, Ogre::SceneNode* parent = nullptr);
+      Aspa(Ogre::SceneManager* sm, Nodo* parent = nullptr);
       Ogre::SceneManager* mSM = nullptr;
-      Ogre::SceneNode* aspaNode = nullptr;
-      Ogre::SceneNode* tableroNode = nullptr;
-      Ogre::SceneNode* cilindroNode = nullptr;
+      Nodo* aspaNode = nullptr;
+      Nodo* tableroNode = nullptr;
+      Nodo* cilindroNode = nullptr;
       static int id;
       static void addID() { id++; };
   };
@@ -85,23 +88,41 @@ protected:
   friend class Molino;
   class Molino : OgreBites::InputListener {
   public:
-      Molino(Ogre::SceneManager* sm, int n);
+      Molino(Ogre::SceneManager* sm, int n, Nodo* parent);
       Ogre::SceneManager* mSM = nullptr;
-      Ogre::SceneNode* mNode = nullptr;
-      Ogre::SceneNode* esferaNode = nullptr;
-      Ogre::SceneNode* cilindroNode = nullptr;
-      Ogre::SceneNode* botoncicoNode = nullptr;
+      Nodo* mNode = nullptr;
+      Nodo* esferaNode = nullptr;
+      Nodo* cilindroNode = nullptr;
       AspasMolino* aspas = nullptr;
-      Ogre::SceneNode* aspasParent = nullptr;
+      Nodo* aspasParent = nullptr;
   };
   AspasMolino* aspasMolino = nullptr;
   bool hayArray = false;
   Molino* molino = nullptr;
   
-  Ogre::SceneNode* planets = nullptr;
-  Ogre::SceneNode* tierraNode = nullptr;
-  Ogre::SceneNode* lunaNode = nullptr;
-  Ogre::SceneNode* solNode= nullptr;
+  Nodo* planets = nullptr;
+  Nodo* tierraNode = nullptr;
+  Nodo* lunaNode = nullptr;
+  Nodo* solNode= nullptr;
+
+  class Avion
+  {
+
+  public:
+      Avion(Ogre::SceneManager* sm, Nodo* parent, IG2App* app);
+      void rotateHelices(float dg);
+  private:
+      Ogre::SceneManager* mSM = nullptr;
+      Nodo* mNode = nullptr;
+      Nodo* mCuerpoNode = nullptr;
+      Nodo* malaINode = nullptr;
+      Nodo* malaDNode = nullptr;
+      Nodo* botoncico = nullptr;
+      Nodo* pilotoNode = nullptr;
+      Nodo* heliceNodeL = nullptr;
+      Nodo* heliceNodeR = nullptr;
+  };
+  Avion* avion = nullptr;
 };
 
 
