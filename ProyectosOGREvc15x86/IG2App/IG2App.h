@@ -6,6 +6,7 @@
 #include <OgreSceneNode.h>
 #include <OgreTrays.h>
 #include <OgreCameraMan.h>
+#include "EntidadIG.h";
 
 using Nodo = Ogre::SceneNode;
 namespace helpers {
@@ -20,7 +21,8 @@ class IG2App : public  OgreBites::IG2ApplicationContext, OgreBites::InputListene
 public:
   explicit IG2App() : IG2ApplicationContext("IG2App") { };  // new -> setup()  
   virtual ~IG2App() { };   // delete -> shutdown()  
- 
+  static bool hayArray;
+  static void setArray(bool b) { hayArray = b; };
 protected:
   virtual void setup();
   virtual void shutdown();
@@ -64,21 +66,20 @@ protected:
   std::vector<Nodo*> cilindroNodes;
 
   class Aspa;
-  class AspasMolino  {
+  class AspasMolino : public EntidadIG {
   public:
-      AspasMolino(Ogre::SceneManager* sm, int n, bool flag, Nodo* parent=nullptr);
+      AspasMolino(int n, bool flag, Nodo* parent);
+      ~AspasMolino() { if (arrayAspas) delete[]arrayAspas;};
       int numAspas;
-      Nodo* aspasNode=nullptr;
-      Ogre::SceneManager* mSM;
       IG2App::Aspa** arrayAspas = nullptr;
-       static int count;
-       Nodo* botoncicoNode = nullptr;
+      static int count;
+      Nodo* botoncicoNode = nullptr;
+  private:
+      virtual bool keyPressed(const OgreBites::KeyboardEvent& evt);
   };
-  class Aspa {
+  class Aspa : public EntidadIG {
   public:
       Aspa(Ogre::SceneManager* sm, Nodo* parent = nullptr);
-      Ogre::SceneManager* mSM = nullptr;
-      Nodo* aspaNode = nullptr;
       Nodo* tableroNode = nullptr;
       Nodo* cilindroNode = nullptr;
       static int id;
@@ -86,18 +87,17 @@ protected:
   };
 
   friend class Molino;
-  class Molino : OgreBites::InputListener {
+  class Molino : public EntidadIG {
   public:
       Molino(Ogre::SceneManager* sm, int n, Nodo* parent);
-      Ogre::SceneManager* mSM = nullptr;
-      Nodo* mNode = nullptr;
       Nodo* esferaNode = nullptr;
       Nodo* cilindroNode = nullptr;
       AspasMolino* aspas = nullptr;
       Nodo* aspasParent = nullptr;
+  private:
+      virtual bool keyPressed(const OgreBites::KeyboardEvent& evt);
   };
   AspasMolino* aspasMolino = nullptr;
-  bool hayArray = false;
   Molino* molino = nullptr;
   
   Nodo* planets = nullptr;
@@ -105,22 +105,22 @@ protected:
   Nodo* lunaNode = nullptr;
   Nodo* solNode= nullptr;
 
-  class Avion
+  class Avion : public EntidadIG
   {
 
   public:
-      Avion(Ogre::SceneManager* sm, Nodo* parent, IG2App* app);
+      Avion(Nodo* parent);
       void rotateHelices(float dg);
   private:
-      Ogre::SceneManager* mSM = nullptr;
-      Nodo* mNode = nullptr;
       Nodo* mCuerpoNode = nullptr;
       Nodo* malaINode = nullptr;
       Nodo* malaDNode = nullptr;
       Nodo* botoncico = nullptr;
       Nodo* pilotoNode = nullptr;
       Nodo* heliceNodeL = nullptr;
-      Nodo* heliceNodeR = nullptr;
+      Nodo* heliceNodeR = nullptr;  
+  private:
+          virtual bool keyPressed(const OgreBites::KeyboardEvent& evt) override;
   };
   Avion* avion = nullptr;
 };
