@@ -36,7 +36,7 @@ protected:
   virtual void startScene2(int option = 0); //Reloj AKA agujitas
 
   virtual void startScene3(int option = 0);   //Molino
-  virtual void startScene4(int option=0);   //Molino entero
+  virtual void startScene4(int option = 0);   //Molino entero
 
   virtual bool keyPressed(const OgreBites::KeyboardEvent& evt);  // InputListener
   bool flag = false;
@@ -68,13 +68,15 @@ protected:
   class Aspa;
   class AspasMolino : public EntidadIG {
   public:
-      AspasMolino(int n, bool flag, Nodo* parent);
+      AspasMolino(int n, bool flag, Nodo* parent, float speed=1);
       ~AspasMolino() { if (arrayAspas) delete[]arrayAspas;};
       int numAspas;
       IG2App::Aspa** arrayAspas = nullptr;
       static int count;
       Nodo* botoncicoNode = nullptr;
   private:
+      bool savedInArray = false;
+      float rSpeed=1;
       virtual bool keyPressed(const OgreBites::KeyboardEvent& evt);
   };
   class Aspa : public EntidadIG {
@@ -110,7 +112,8 @@ protected:
 
   public:
       Avion(Nodo* parent);
-      void rotateHelices(float dg);
+      AspasMolino* left;
+      AspasMolino* right;
   private:
       Nodo* mCuerpoNode = nullptr;
       Nodo* malaINode = nullptr;
@@ -119,10 +122,18 @@ protected:
       Nodo* pilotoNode = nullptr;
       Nodo* heliceNodeL = nullptr;
       Nodo* heliceNodeR = nullptr;  
-  private:
-          virtual bool keyPressed(const OgreBites::KeyboardEvent& evt) override;
   };
   Avion* avion = nullptr;
+
+  class Plano : public EntidadIG
+  {
+  public:
+      static int id;
+      Plano(Nodo* parent, float width, float height);
+      ~Plano() {};
+  private:
+
+  };
 };
 
 

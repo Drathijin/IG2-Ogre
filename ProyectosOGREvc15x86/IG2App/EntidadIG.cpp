@@ -26,6 +26,5 @@ bool EntidadIG::keyPressed(const OgreBites::KeyboardEvent& evt)
 {
 	/*if (evt.keysym.sym == SDLK_k) {
 	}*/
-	printf("Papa loves u\n");
 	return true;
 }
