@@ -340,7 +340,7 @@ void IG2App::startScene4(int option)
 
 		Avion* plane = new Avion(parent);
 		plane->getNode()->scale(Vector3(0.3));
-		plane->getNode()->translate({ -50, 200, -100 });
+		plane->getNode()->translate({ 350 - 100, 200, -130 - 100 });
 		addInputListener(plane);
 		addInputListener(plane->left);
 		addInputListener(plane->right);
@@ -354,6 +354,8 @@ void IG2App::startScene4(int option)
 		createEntity(sinbad, "sinbad", "Sinbad.mesh", baseSimbad->getNode())->scale(Vector3(20));
 
 		sinbad->translate({ 0,100,0 });
+
+		mSM->getLight("Luz")->setVisible(false);
 	}
 };
 
@@ -419,7 +421,7 @@ IG2App::Molino::Molino(Ogre::SceneManager* sm, int n, Nodo* parent) :
 	helpers::createEntity(mSM, esferaNode, "techo", "sphere.mesh", mNode)->scale(Vector3(0.28));
 	esferaNode->setPosition({0,130,0});
 	
-	aspas = new AspasMolino(n, true, aspasParent);
+	aspas = new AspasMolino(n, true, aspasParent,.01);
 	
 	aspasParent->translate({ 0,125,34 }); 
 }
@@ -432,7 +434,6 @@ bool IG2App::Molino::keyPressed(const OgreBites::KeyboardEvent& evt)
 		aspasParent->yaw(Ogre::Degree(10), Ogre::Node::TS_LOCAL);
 		aspasParent->translate({ 0, 0, 34 }, Ogre::Node::TS_LOCAL);
 	}
-
 	else if (evt.keysym.sym == SDLK_c)
 	{
 		aspas->botoncicoNode->translate(Vector3(0, 0, botonPaTras ? 50 : -50));
@@ -444,22 +445,24 @@ bool IG2App::AspasMolino::keyPressed(const OgreBites::KeyboardEvent& evt)
 {
 	if (evt.keysym.sym == SDLK_g)
 	{
-		mNode->roll(Ogre::Degree(rSpeed));
-		
-		if (savedInArray)
-		{
-			for (int i = 0; i < numAspas; i++)
-			{
-				arrayAspas[i]->cilindroNode->roll(Ogre::Degree(-rSpeed), Ogre::Node::TS_PARENT);
-			}
-		}
-		else
-		{
-		  for (int i = 0; i < numAspas; i++)
-			mSM->getSceneNode("adorno_"+std::to_string(i))->roll(Ogre::Degree(-rSpeed));
-		}
+		girarAspas();
 	}
 	return 1;
+}
+void IG2App::AspasMolino::girarAspas(float delta)
+{
+	mNode->roll(Ogre::Degree(rSpeed));
+
+	if (savedInArray)
+	{
+		for (int i = 0; i < numAspas; i++)
+			arrayAspas[i]->cilindroNode->roll(Ogre::Degree(-rSpeed * delta), Ogre::Node::TS_PARENT);
+	}
+	else
+	{
+		for (int i = 0; i < numAspas; i++)
+			mSM->getSceneNode("adorno_" + std::to_string(i))->roll(Ogre::Degree(-rSpeed * delta));
+	}
 }
 IG2App::Avion::Avion(Nodo* parent) : 
 	EntidadIG(parent->createChildSceneNode())
@@ -490,6 +493,25 @@ IG2App::Avion::Avion(Nodo* parent) :
 	helpers::createEntity(mSM, pilotoNode, "piloto", "ninja.mesh", mNode);
 	pilotoNode->translate({ 0,-30,-15 }); 
 	pilotoNode->yaw(Ogre::Degree(180));
+
+	planeLight = mSM->createLight("planeLight");
+	planeLight->setType(Ogre::Light::LT_SPOTLIGHT);
+	planeLight->setDiffuseColour(0.75, 0.75, 0.75);
+	planeLight->setDirection({1,-1,0});
+	planeLight->setSpotlightOuterAngle(Ogre::Degree(90));
+
+
+	//planeLight->setDiffuseColour(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
+	//planeLight->setDirection(Ogre::Vector3(1, -1, 0));
+	//planeLight->setSpotlightInnerAngle(Ogre::Degree(5.0f));
+	//planeLight->setSpotlightOuterAngle(Ogre::Degree(45.0f));
+	//planeLight->setSpotlightFalloff(0.0f);
+
+	planeLight->setCastShadows(false);
+	auto lightNode = mNode->createChildSceneNode();
+	lightNode->attachObject(planeLight);
+
+	mSM->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 }
 int IG2App::Plano::id = 0;
 IG2App::Plano::Plano(Nodo* parent, float width, float height) :EntidadIG(parent->createChildSceneNode())

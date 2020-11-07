@@ -53,7 +53,7 @@ protected:
   Nodo* mHours[12];
   Nodo* mNeedles[3];
     
-
+  
 
   Nodo* aspaNode = nullptr;
   Nodo* tableroNode = nullptr;
@@ -74,6 +74,7 @@ protected:
       IG2App::Aspa** arrayAspas = nullptr;
       static int count;
       Nodo* botoncicoNode = nullptr;
+      void girarAspas(float delta=1);
   private:
       bool savedInArray = false;
       float rSpeed=1;
@@ -98,6 +99,10 @@ protected:
       Nodo* aspasParent = nullptr;
   private:
       virtual bool keyPressed(const OgreBites::KeyboardEvent& evt);
+      virtual void frameRendered(const Ogre::FrameEvent& evt) 
+      {
+          aspas->girarAspas(evt.timeSinceLastEvent);
+      }
   };
   AspasMolino* aspasMolino = nullptr;
   Molino* molino = nullptr;
@@ -122,6 +127,22 @@ protected:
       Nodo* pilotoNode = nullptr;
       Nodo* heliceNodeL = nullptr;
       Nodo* heliceNodeR = nullptr;  
+      Ogre::Light* planeLight = nullptr;
+      
+      virtual void frameRendered(const Ogre::FrameEvent& evt) 
+      {
+            left->girarAspas(evt.timeSinceLastEvent);
+            right->girarAspas(evt.timeSinceLastEvent);
+            float delta = evt.timeSinceLastEvent;
+
+            float x = 200;
+            float z = 200;
+
+            mNode->translate({ x,-200,z }, Ogre::Node::TS_LOCAL);
+            mNode->yaw(Ogre::Degree(50*delta)); 
+            mNode->translate({ -x,200,-z }, Ogre::Node::TS_LOCAL);
+            
+       }
   };
   Avion* avion = nullptr;
 
@@ -133,6 +154,14 @@ protected:
       ~Plano() {};
   private:
 
+  };
+
+  class Simbad : public EntidadIG
+  {
+  public:
+      Simbad(Nodo* parent);
+      ~Simbad() {};
+      
   };
 };
 
