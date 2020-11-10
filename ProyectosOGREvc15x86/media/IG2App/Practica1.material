@@ -1,0 +1,143 @@
+material Avion/Cuerpo
+{
+    technique
+    {
+        pass
+		{
+			ambient 0.7 0.7 0
+			diffuse 0.7 0.2 0.2
+        }
+    }
+}
+
+material Avion/Botoncico
+{
+    technique
+    {
+        pass
+		{
+			ambient 0.7 0.7 0
+			diffuse 0.7 0.4 0.2
+        }
+    }
+}
+material Avion/Alas
+{
+    technique
+    {
+        pass
+		{
+            texture_unit
+            {
+			    texture checker.png
+            }
+        }
+    }
+}
+material Avion/Piloto
+{
+    technique
+    {
+        pass
+		{
+			ambient 0.7 0.7 0
+			diffuse 0.8 0.8 0.2
+        }
+    }
+}
+material Aspas/Tabla
+{
+    technique
+    {
+        pass
+		{
+			ambient 0.7 0.7 0
+			diffuse 0.6 0.3 0
+        }
+    }
+}
+material Aspas/Botoncico
+{
+    technique
+    {
+        pass
+		{
+			ambient 0.7 0.7 0
+			diffuse 0.3 0.3 0.3
+            texture_unit
+            {
+                texture MRAMOR-bump.jpg
+            }
+        }
+    }
+}
+material Aspas/Adorno
+{
+    technique
+    {
+        pass
+		{
+			ambient 0.7 0.7 0
+			diffuse 0.2 0.7 1
+        }
+    }
+}
+material Molino/Paredes
+{
+    technique
+    {
+        pass
+        {
+            texture_unit
+		    {
+			    texture floor_diffuse.PNG 
+            }
+        }
+    }
+}
+material Molino/Techo
+{
+    technique
+    {
+        pass
+		{
+			ambient 0.7 0.7 0
+			diffuse 0.9 1 0.1
+        }
+    }
+}
+material Plano/Agua
+{
+    technique
+    {
+        pass
+        {
+            texture_unit
+		    {
+			    texture Water02.jpg
+            }
+        }
+    }
+}
+material Plano/Sinbad
+{
+    technique
+    {
+        pass
+		{
+			ambient 0.7 0.7 0
+			diffuse 1 0.1 0.1
+        }
+    }
+}
+material Plano/Molino
+{
+    technique
+    {
+        pass
+		{
+			ambient 0.7 0.7 0
+			diffuse 0.9 0.5 0.1
+        }
+    }
+}
