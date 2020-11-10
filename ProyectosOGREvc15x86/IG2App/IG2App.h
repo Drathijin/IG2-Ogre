@@ -165,6 +165,8 @@ protected:
       static int id;
       Plano(Nodo* parent, float width, float height, std::string string="");
       ~Plano() {};
+      virtual bool keyPressed(const OgreBites::KeyboardEvent& evt);
+
   private:
 
   };
