@@ -511,7 +511,7 @@ IG2App::Avion::Avion(Nodo* parent) :
 	auto lightNode = mNode->createChildSceneNode();
 	lightNode->attachObject(planeLight);
 
-	mSM->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
+	//mSM->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 }
 int IG2App::Plano::id = 0;
 IG2App::Plano::Plano(Nodo* parent, float width, float height) :EntidadIG(parent->createChildSceneNode())
