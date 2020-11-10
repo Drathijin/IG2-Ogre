@@ -97,11 +97,17 @@ protected:
       Nodo* cilindroNode = nullptr;
       AspasMolino* aspas = nullptr;
       Nodo* aspasParent = nullptr;
+
   private:
+
+      bool spin = true;
+
+
       virtual bool keyPressed(const OgreBites::KeyboardEvent& evt);
       virtual void frameRendered(const Ogre::FrameEvent& evt) 
       {
-          aspas->girarAspas(evt.timeSinceLastEvent);
+          if (spin)
+              aspas->girarAspas(evt.timeSinceLastEvent);
       }
   };
   AspasMolino* aspasMolino = nullptr;
@@ -120,6 +126,9 @@ protected:
       AspasMolino* left;
       AspasMolino* right;
   private:
+      bool spin = true;
+
+
       Nodo* mCuerpoNode = nullptr;
       Nodo* malaINode = nullptr;
       Nodo* malaDNode = nullptr;
@@ -128,7 +137,9 @@ protected:
       Nodo* heliceNodeL = nullptr;
       Nodo* heliceNodeR = nullptr;  
       Ogre::Light* planeLight = nullptr;
-      
+
+      virtual bool keyPressed(const OgreBites::KeyboardEvent& evt);
+
       virtual void frameRendered(const Ogre::FrameEvent& evt) 
       {
             left->girarAspas(evt.timeSinceLastEvent);
@@ -137,10 +148,12 @@ protected:
 
             float x = 200;
             float z = 200;
-
-            mNode->translate({ x,-200,z }, Ogre::Node::TS_LOCAL);
-            mNode->yaw(Ogre::Degree(20*delta)); 
-            mNode->translate({ -x,200,-z }, Ogre::Node::TS_LOCAL);
+            if (spin)
+            {
+                mNode->translate({ x,-200,z }, Ogre::Node::TS_LOCAL);
+                mNode->yaw(Ogre::Degree(20 * delta));
+                mNode->translate({ -x,200,-z }, Ogre::Node::TS_LOCAL);
+            }
             
        }
   };

@@ -358,6 +358,10 @@ void IG2App::startScene4(int option)
 
 		//Nodo* sinbad = nullptr;
 		//createEntity(sinbad, "sinbad", "Sinbad.mesh", baseSimbad->getNode())->scale(Vector3(20));
+		Nodo* carita;
+		helpers::createEntity(mSM, carita, "billboard", "sphere.mesh", parent, "Esfera/Cabeza");
+		carita->translate(Vector3(400, 27, -100));
+		carita->scale(Vector3(0.25));
 
 		//sinbad->translate({ 0,100,0 });
 		Simbad* simbad = new Simbad(baseSimbad->getNode());
@@ -450,13 +454,30 @@ bool IG2App::Molino::keyPressed(const OgreBites::KeyboardEvent& evt)
 		aspas->botoncicoNode->translate(Vector3(0, 0, botonPaTras ? 50 : -50));
 		botonPaTras = !botonPaTras;
 	}
-	return 1;
+	else if (evt.keysym.sym == SDLK_r)
+	{
+		spin = false;
+	}
+	return true;
 }
 bool IG2App::AspasMolino::keyPressed(const OgreBites::KeyboardEvent& evt)
 {
 	if (evt.keysym.sym == SDLK_g)
 	{
 		girarAspas();
+	}
+	else if (evt.keysym.sym == SDLK_r)
+	{
+		if (savedInArray)
+		{
+			for (int i = 0; i < numAspas; i++)
+				arrayAspas[i]->cilindroNode->setVisible(false);
+		}
+		else
+		{
+			for (int i = 0; i < numAspas; i++)
+				mSM->getSceneNode("adorno_" + std::to_string(i))->setVisible(false);
+		}
 	}
 	return 1;
 }
@@ -526,6 +547,15 @@ IG2App::Avion::Avion(Nodo* parent) :
 
 	//mSM->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 }
+bool IG2App::Avion::keyPressed(const OgreBites::KeyboardEvent& evt)
+{
+	if (evt.keysym.sym == SDLK_r)
+	{
+		spin = false;
+		planeLight->setVisible(false);
+	}
+	return true;
+}
 int IG2App::Plano::id = 0;
 IG2App::Plano::Plano(Nodo* parent, float width, float height, std::string matName ) :EntidadIG(parent->createChildSceneNode())
 {
@@ -539,6 +569,11 @@ IG2App::Plano::Plano(Nodo* parent, float width, float height, std::string matNam
 	mNode->attachObject(ent);
 
 	IG2App::Plano::id++;
+}
+
+bool IG2App::Plano::keyPressed(const OgreBites::KeyboardEvent& evt)
+{
+	return false;
 }
 
 IG2App::Simbad::Simbad(Nodo* parent) : EntidadIG(parent->createChildSceneNode())

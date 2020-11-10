@@ -115,6 +115,15 @@ material Plano/Agua
             texture_unit
 		    {
 			    texture Water02.jpg
+                scroll_anim -0.1 0.0
+            }
+        }
+        pass
+        {
+        
+            texture_unit
+		    {
+			    texture BeachStones.jpg
             }
         }
     }
@@ -138,6 +147,20 @@ material Plano/Molino
 		{
 			ambient 0.7 0.7 0
 			diffuse 0.9 0.5 0.1
+        }
+    }
+}
+material Esfera/Cabeza
+{
+    technique
+    {
+        pass
+		{
+            texture_unit
+		    {
+			    texture spotlight_image.png
+                env_map spherical
+            }
         }
     }
 }
