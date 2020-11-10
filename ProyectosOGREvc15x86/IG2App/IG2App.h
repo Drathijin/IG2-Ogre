@@ -163,12 +163,12 @@ protected:
   {
   public:
       static int id;
-      Plano(Nodo* parent, float width, float height, std::string string="");
+      Plano(Nodo* parent, float width, float height, std::string string="", std::string entName= "");
       ~Plano() {};
       virtual bool keyPressed(const OgreBites::KeyboardEvent& evt);
-
+      virtual void receiveEvent(MessageType msj, EntidadIG* entidad);
   private:
-
+      Ogre::Entity* mEnt = nullptr;
   };
 
   class Simbad : public EntidadIG

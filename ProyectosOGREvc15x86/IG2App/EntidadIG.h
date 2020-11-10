@@ -29,10 +29,11 @@ public:
 	~EntidadIG();
 	enum class MessageType
 	{
-		update = 0
+		update = 0,
+		emptyRiver,
 	};
 	static std::vector<EntidadIG*> appListeners;
-	static void addListener(EntidadIG* entidad) { appListeners.push_back(entidad); };
+	static void addListener(EntidadIG* entidad) { appListeners.push_back(entidad);};
 	void sendEvent(MessageType msj, EntidadIG* entidad);
 	virtual void receiveEvent(MessageType msj, EntidadIG* entidad) {};
 	virtual Ogre::SceneNode* getNode() { return mNode; };

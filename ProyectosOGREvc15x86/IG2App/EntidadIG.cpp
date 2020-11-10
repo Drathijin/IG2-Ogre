@@ -19,7 +19,13 @@ EntidadIG::~EntidadIG()
 void EntidadIG::sendEvent(MessageType msj, EntidadIG* entidad)
 {
 	for (EntidadIG* e : appListeners)
-		e->receiveEvent(msj, this);
+	{
+		if (e)
+		{
+			e->receiveEvent(msj, nullptr);
+			printf("Sending to: %p\n", e);
+		}
+	}
 }
 
 bool EntidadIG::keyPressed(const OgreBites::KeyboardEvent& evt)

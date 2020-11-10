@@ -141,6 +141,7 @@ void IG2App::setupScene(void)
   luz->setType(Ogre::Light::LT_DIRECTIONAL);
   luz->setDiffuseColour(0.75, 0.75, 0.75);
   luz->setDirection({ 0,-1, -1 });
+  
 
   mLightNode = mSM->getRootSceneNode()->createChildSceneNode("nLuz");
   //mLightNode = mCamNode->createChildSceneNode("nLuz");
@@ -336,7 +337,7 @@ void IG2App::startScene4(int option)
 	else if (option == 3)
 	{
 		Nodo* parent = mSM->getRootSceneNode()->createChildSceneNode();
-		Plano * base = new Plano(parent, 1200,800, "Plano/Agua");
+		Plano * base = new Plano(parent, 1200,800, "Plano/Agua", "River");
 
 		Plano * baseSimbad = new Plano(base->getNode(),200,200, "Plano/Sinbad");
 		baseSimbad->getNode()->translate({ 100-600,2,300 });
@@ -368,6 +369,7 @@ void IG2App::startScene4(int option)
 		simbad->getNode()->scale({ 20,20,20 });
 		simbad->getNode()->translate({0,100,0});
 
+		EntidadIG::addListener(base);
 		//mSM->getLight("Luz")->setVisible(false);
 	}
 };
@@ -457,6 +459,12 @@ bool IG2App::Molino::keyPressed(const OgreBites::KeyboardEvent& evt)
 	else if (evt.keysym.sym == SDLK_r)
 	{
 		spin = false;
+		auto objs = esferaNode->getAttachedObjects();
+		for (auto o : objs)
+		{
+			((Ogre::Entity*)o)->setMaterialName("Avion/Cuerpo");
+		}
+		sendEvent(EntidadIG::MessageType::emptyRiver, nullptr);
 	}
 	return true;
 }
@@ -544,8 +552,9 @@ IG2App::Avion::Avion(Nodo* parent) :
 	planeLight->setCastShadows(true);
 	auto lightNode = mNode->createChildSceneNode();
 	lightNode->attachObject(planeLight);
+	lightNode->translate({ 0,-40,0 }); 
 
-	//mSM->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
+	mSM->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 }
 bool IG2App::Avion::keyPressed(const OgreBites::KeyboardEvent& evt)
 {
@@ -557,16 +566,17 @@ bool IG2App::Avion::keyPressed(const OgreBites::KeyboardEvent& evt)
 	return true;
 }
 int IG2App::Plano::id = 0;
-IG2App::Plano::Plano(Nodo* parent, float width, float height, std::string matName ) :EntidadIG(parent->createChildSceneNode())
+IG2App::Plano::Plano(Nodo* parent, float width, float height, std::string matName, std::string entName ) :EntidadIG(parent->createChildSceneNode())
 {
 	auto p = MeshManager::getSingleton().createPlane("plane"+std::to_string(Plano::id),
 		ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
 		Plane(Vector3::UNIT_Y, 0),
 		width, height, 100, 80, true, 1, 1.0, 1.0, Vector3::UNIT_Z);
-	auto ent = mSM->createEntity(p);
+	mEnt = (entName == "") ? mSM->createEntity(p) : mSM->createEntity(entName, p);
+	
 	if (matName != "")
-		ent->setMaterialName(matName);
-	mNode->attachObject(ent);
+		mEnt->setMaterialName(matName);
+	mNode->attachObject(mEnt);
 
 	IG2App::Plano::id++;
 }
@@ -574,6 +584,17 @@ IG2App::Plano::Plano(Nodo* parent, float width, float height, std::string matNam
 bool IG2App::Plano::keyPressed(const OgreBites::KeyboardEvent& evt)
 {
 	return false;
+}
+
+void IG2App::Plano::receiveEvent(MessageType msj, EntidadIG* entidad)
+{
+	if (msj == EntidadIG::MessageType::emptyRiver && mEnt->getName()== "River")
+	{
+		mEnt->setMaterialName("Plano/SinAgua");
+		printf("%p\n", this);
+	}
+	printf("SUPER-BLA\n");
+
 }
 
 IG2App::Simbad::Simbad(Nodo* parent) : EntidadIG(parent->createChildSceneNode())
