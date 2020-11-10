@@ -9,9 +9,13 @@
 using namespace Ogre;
 bool IG2App::hayArray = false;
 
-Nodo* helpers::createEntity(Ogre::SceneManager* sm, Nodo*& Node, std::string id, std::string mesh, Nodo* parent)
+Nodo* helpers::createEntity(Ogre::SceneManager* sm, Nodo*& Node, std::string id, std::string mesh, Nodo* parent, std::string material)
 {
 	Ogre::Entity* ent = sm->createEntity(mesh);
+	if (material != "")
+	{
+		ent->setMaterialName(material);
+	}
 	Node = (!parent) ? sm->getRootSceneNode()->createChildSceneNode(id) : parent->createChildSceneNode(id);
 	Node->attachObject(ent);
 	return Node;
@@ -136,11 +140,13 @@ void IG2App::setupScene(void)
   Light* luz = mSM->createLight("Luz");
   luz->setType(Ogre::Light::LT_DIRECTIONAL);
   luz->setDiffuseColour(0.75, 0.75, 0.75);
- 
+  luz->setDirection({ 0,-1, -1 });
+
   mLightNode = mSM->getRootSceneNode()->createChildSceneNode("nLuz");
   //mLightNode = mCamNode->createChildSceneNode("nLuz");
   mLightNode->attachObject(luz);
 
+  //Ogre::MaterialManager::getSingleton().create("Avion/Cuerpo", "Practica1.material", false);
   //mLightNode->setPosition(0, 0, 1000);
  
   //------------------------------------------------------------------------
@@ -330,13 +336,13 @@ void IG2App::startScene4(int option)
 	else if (option == 3)
 	{
 		Nodo* parent = mSM->getRootSceneNode()->createChildSceneNode();
-		Plano * base = new Plano(parent, 1200,800);
+		Plano * base = new Plano(parent, 1200,800, "Plano/Agua");
 
-		Plano * baseSimbad = new Plano(base->getNode(),200,200);
-		baseSimbad->getNode()->translate({ 100-600,0,300 });
+		Plano * baseSimbad = new Plano(base->getNode(),200,200, "Plano/Sinbad");
+		baseSimbad->getNode()->translate({ 100-600,2,300 });
 
-		Plano * baseMolino = new Plano(parent,500,500);
-		baseMolino->getNode()->translate({ 600-250,0,-150 });
+		Plano * baseMolino = new Plano(parent,500,500, "Plano/Molino");
+		baseMolino->getNode()->translate({ 600-250,2,-150 });
 
 		Avion* plane = new Avion(parent);
 		plane->getNode()->scale(Vector3(0.3));
@@ -350,12 +356,15 @@ void IG2App::startScene4(int option)
 		addInputListener(molino);
 		addInputListener(molino->aspas);
 
-		Nodo* sinbad = nullptr;
-		createEntity(sinbad, "sinbad", "Sinbad.mesh", baseSimbad->getNode())->scale(Vector3(20));
+		//Nodo* sinbad = nullptr;
+		//createEntity(sinbad, "sinbad", "Sinbad.mesh", baseSimbad->getNode())->scale(Vector3(20));
 
-		sinbad->translate({ 0,100,0 });
+		//sinbad->translate({ 0,100,0 });
+		Simbad* simbad = new Simbad(baseSimbad->getNode());
+		simbad->getNode()->scale({ 20,20,20 });
+		simbad->getNode()->translate({0,100,0});
 
-		mSM->getLight("Luz")->setVisible(false);
+		//mSM->getLight("Luz")->setVisible(false);
 	}
 };
 
@@ -367,11 +376,13 @@ IG2App::Aspa::Aspa(Ogre::SceneManager* sm, Nodo* parent) :
 {	
 	tableroNode = mNode->createChildSceneNode("tablero_" + std::to_string(Aspa::id));
 	Ogre::Entity* ent = mSM->createEntity("cube.mesh");
+	ent->setMaterialName("Aspas/Tabla");
 	tableroNode->attachObject(ent);
 	tableroNode->setScale(Vector3(.1, 1,.1));
 	tableroNode->setPosition(0, -60, 0);
 	cilindroNode = mNode->createChildSceneNode("adorno_" + std::to_string(Aspa::id));
 	ent = mSM->createEntity("Barrel.mesh");
+	ent->setMaterialName("Aspas/Adorno");
 	cilindroNode->attachObject(ent);
 	cilindroNode->setPosition(0, -100, 5);
 	addID();}
@@ -403,7 +414,7 @@ IG2App::AspasMolino::AspasMolino(int n, bool flag, Nodo* parent, float speed)
 			arrayAspas[i]->cilindroNode->roll(Angle(-i * (360 / numAspas)));
 		}
 	}
-	helpers::createEntity(mSM, botoncicoNode, "boton"+AspasMolino::count, "Barrel.mesh", parent)->pitch(Ogre::Degree(90));
+	helpers::createEntity(mSM, botoncicoNode, "boton"+AspasMolino::count, "Barrel.mesh", parent, "Aspas/Botoncico")->pitch(Ogre::Degree(90));
 	botoncicoNode->scale({ 5, 1.5, 5 });
 	botoncicoNode->setPosition({ 0, 0, 10 });//ok
 	AspasMolino::count++;	
@@ -415,13 +426,13 @@ IG2App::Molino::Molino(Ogre::SceneManager* sm, int n, Nodo* parent) :
 {
 	mSM = sm;
 	aspasParent = mNode->createChildSceneNode();
-	helpers::createEntity(mSM, cilindroNode, "paredes", "Barrel.mesh", mNode)->scale({10.5,45,10.5});
+	helpers::createEntity(mSM, cilindroNode, "paredes", "Barrel.mesh", mNode, "Molino/Paredes")->scale({10.5,45,10.5});
 	cilindroNode->setPosition({0,0,0});
 
-	helpers::createEntity(mSM, esferaNode, "techo", "sphere.mesh", mNode)->scale(Vector3(0.28));
+	helpers::createEntity(mSM, esferaNode, "techo", "sphere.mesh", mNode, "Molino/Techo")->scale(Vector3(0.26));
 	esferaNode->setPosition({0,130,0});
 	
-	aspas = new AspasMolino(n, true, aspasParent,.01);
+	aspas = new AspasMolino(n, true, aspasParent, 10);
 	
 	aspasParent->translate({ 0,125,34 }); 
 }
@@ -451,7 +462,7 @@ bool IG2App::AspasMolino::keyPressed(const OgreBites::KeyboardEvent& evt)
 }
 void IG2App::AspasMolino::girarAspas(float delta)
 {
-	mNode->roll(Ogre::Degree(rSpeed));
+	mNode->roll(Ogre::Degree(rSpeed*delta));
 
 	if (savedInArray)
 	{
@@ -467,30 +478,32 @@ void IG2App::AspasMolino::girarAspas(float delta)
 IG2App::Avion::Avion(Nodo* parent) : 
 	EntidadIG(parent->createChildSceneNode())
 {
-	helpers::createEntity(mSM, mCuerpoNode, "AvionCuerpo", "sphere.mesh", mNode);
+	helpers::createEntity(mSM, mCuerpoNode, "AvionCuerpo", "sphere.mesh", mNode, "Avion/Cuerpo");
+
+
 	float scale = 2.5;
 	float offset = 200;
 
-	helpers::createEntity(mSM, malaINode, "AvionAlaI", "cube.mesh", mNode);
+	helpers::createEntity(mSM, malaINode, "AvionAlaI", "cube.mesh", mNode, "Avion/Alas");
 	malaINode->scale({ scale,0.1,1 });
 	malaINode->translate({ offset,0,0 });
 	heliceNodeL = mNode->createChildSceneNode();
-	left = new AspasMolino(5, 1, heliceNodeL, 20);
+	left = new AspasMolino(5, 1, heliceNodeL, 2000);
 	heliceNodeL->translate({ offset,0,50 });
 
 
-	helpers::createEntity(mSM, malaDNode, "AvionAlaD", "cube.mesh", mNode);
+	helpers::createEntity(mSM, malaDNode, "AvionAlaD", "cube.mesh", mNode, "Avion/Alas");
 	malaDNode->scale({ scale,0.1,1 });
 	malaDNode->translate({ -offset,0,0 });
 	heliceNodeR = mNode->createChildSceneNode();
-	right=new AspasMolino(5, 1, heliceNodeR, 20);
+	right=new AspasMolino(5, 1, heliceNodeR, 2000);
 	heliceNodeR->translate({ -offset,0,50 });
 
-	helpers::createEntity(mSM, botoncico, "boton879879754321xD", "Barrel.mesh", mNode)->pitch(Ogre::Degree(90));
+	helpers::createEntity(mSM, botoncico, "boton879879754321xD", "Barrel.mesh", mNode, "Avion/Botoncico")->pitch(Ogre::Degree(90));
 	botoncico->translate({ 0,0,100 });
 	botoncico->scale({10,2,10 });
 
-	helpers::createEntity(mSM, pilotoNode, "piloto", "ninja.mesh", mNode);
+	helpers::createEntity(mSM, pilotoNode, "piloto", "ninja.mesh", mNode, "Avion/Piloto");
 	pilotoNode->translate({ 0,-30,-15 }); 
 	pilotoNode->yaw(Ogre::Degree(180));
 
@@ -507,22 +520,29 @@ IG2App::Avion::Avion(Nodo* parent) :
 	//planeLight->setSpotlightOuterAngle(Ogre::Degree(45.0f));
 	//planeLight->setSpotlightFalloff(0.0f);
 
-	planeLight->setCastShadows(false);
+	planeLight->setCastShadows(true);
 	auto lightNode = mNode->createChildSceneNode();
 	lightNode->attachObject(planeLight);
 
 	//mSM->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 }
 int IG2App::Plano::id = 0;
-IG2App::Plano::Plano(Nodo* parent, float width, float height) :EntidadIG(parent->createChildSceneNode())
+IG2App::Plano::Plano(Nodo* parent, float width, float height, std::string matName ) :EntidadIG(parent->createChildSceneNode())
 {
 	auto p = MeshManager::getSingleton().createPlane("plane"+std::to_string(Plano::id),
 		ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
 		Plane(Vector3::UNIT_Y, 0),
 		width, height, 100, 80, true, 1, 1.0, 1.0, Vector3::UNIT_Z);
 	auto ent = mSM->createEntity(p);
-
+	if (matName != "")
+		ent->setMaterialName(matName);
 	mNode->attachObject(ent);
 
 	IG2App::Plano::id++;
+}
+
+IG2App::Simbad::Simbad(Nodo* parent) : EntidadIG(parent->createChildSceneNode())
+{
+	auto ent = mSM->createEntity("Sinbad.mesh");
+	mNode->attachObject(ent);
 }

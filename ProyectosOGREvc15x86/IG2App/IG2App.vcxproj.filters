@@ -43,5 +43,9 @@
     <None Include="..\bin\plugins.cfg">
       <Filter>Archivos de recursos</Filter>
     </None>
+    <None Include="..\media\IG2App\Practica1.material">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="..\bin\resources.cfg" />
   </ItemGroup>
 </Project>

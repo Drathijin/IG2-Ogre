@@ -10,7 +10,7 @@
 
 using Nodo = Ogre::SceneNode;
 namespace helpers {
-    Nodo* createEntity(Ogre::SceneManager* sm, Nodo*& Node, std::string id, std::string mesh, Nodo* parent = nullptr);
+    Nodo* createEntity(Ogre::SceneManager* sm, Nodo*& Node, std::string id, std::string mesh, Nodo* parent = nullptr, std::string material = "");
 }
 
 
@@ -27,9 +27,9 @@ protected:
   virtual void setup();
   virtual void shutdown();
   virtual void setupScene();
-  Nodo* createEntity(Nodo*& Node, std::string id, std::string mesh, Nodo* parent = nullptr)
+  Nodo* createEntity(Nodo*& Node, std::string id, std::string mesh, Nodo* parent = nullptr, std::string material = "")
   {
-      return helpers::createEntity(mSM, Node, id, mesh, parent);
+      return helpers::createEntity(mSM, Node, id, mesh, parent, material);
   }
   virtual void startScene0(int option = 0); //Casco, espada y cara
   virtual void startScene1(int option = 0); //Dragón o Sinbad
@@ -139,7 +139,7 @@ protected:
             float z = 200;
 
             mNode->translate({ x,-200,z }, Ogre::Node::TS_LOCAL);
-            mNode->yaw(Ogre::Degree(50*delta)); 
+            mNode->yaw(Ogre::Degree(20*delta)); 
             mNode->translate({ -x,200,-z }, Ogre::Node::TS_LOCAL);
             
        }
@@ -150,7 +150,7 @@ protected:
   {
   public:
       static int id;
-      Plano(Nodo* parent, float width, float height);
+      Plano(Nodo* parent, float width, float height, std::string string="");
       ~Plano() {};
   private:
 
