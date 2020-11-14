@@ -176,8 +176,69 @@ protected:
   public:
       Simbad(Nodo* parent);
       ~Simbad() {};
-      
+  private:
+      virtual bool keyPressed(const OgreBites::KeyboardEvent& evt) {
+          if (evt.keysym.sym == SDLK_c)
+          {
+              walking = !walking;
+              dancing = !dancing;
+              for (auto pair : ent->getAllAnimationStates()->getAnimationStates())
+              {
+                  auto animationState = pair.second;
+                  animationState->setEnabled(false);
+                  if (walking && (pair.first == "RunTop" || pair.first == "RunBase"))
+                  {
+                      animationState->setEnabled(true);
+                      animationState->setLoop(true);
+                  }
+                  else if (dancing && pair.first == "Dance")
+                  {
+                      animationState->setEnabled(true);
+                      animationState->setLoop(true);
+                  }
+              }
+          }
+          else if (evt.keysym.sym == SDLK_e)
+          {
+              ent->detachObjectFromBone(sword);
+              right = !right;
+              std::string bone = (right) ? "Handle.R" : "Handle.L";
+              ent->attachObjectToBone(bone, sword);
+          }
+          return false; 
+      };
+      virtual void frameRendered(const Ogre::FrameEvent& evt) override
+      {
+          for (auto pair : ent->getAllAnimationStates()->getAnimationStates())
+          {
+              auto animationState = pair.second;      
+              if(animationState->getEnabled())
+                  animationState->addTime(evt.timeSinceLastFrame);
+          }
+      }
+      Ogre::Entity* ent;
+      Ogre::Entity* sword;
+      bool walking = true;
+      bool dancing = false;
+      bool right = true;
+      Ogre::AnimationState* animationState;
   };
+
+  class Boya : public EntidadIG
+  {
+  public:
+      Boya(Nodo* parent);
+      ~Boya() {};
+  private:
+      virtual void frameRendered(const Ogre::FrameEvent& evt) override
+      {
+          animationState->addTime(evt.timeSinceLastFrame);
+      };
+      Ogre::Entity* ent;
+
+      Ogre::AnimationState* animationState;
+  };
+
 };
 
 

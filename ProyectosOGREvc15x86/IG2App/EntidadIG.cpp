@@ -23,7 +23,6 @@ void EntidadIG::sendEvent(MessageType msj, EntidadIG* entidad)
 		if (e)
 		{
 			e->receiveEvent(msj, nullptr);
-			printf("Sending to: %p\n", e);
 		}
 	}
 }
