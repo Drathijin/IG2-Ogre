@@ -122,7 +122,6 @@ protected:
       static int id;
       Plano(Nodo* parent, float width, float height, std::string string = "", std::string entName = "");
       ~Plano() {};
-      virtual bool keyPressed(const OgreBites::KeyboardEvent& evt);
       virtual void receiveEvent(MessageType msj, EntidadIG* entidad);
   private:
       Ogre::Entity* mEnt = nullptr;
@@ -132,8 +131,9 @@ protected:
   class Simbad : public EntidadIG
   {
   public:
-      Simbad(Nodo* parent);
+      Simbad(Nodo* parent, bool listener = false);
       ~Simbad() {};
+      void inline setListener() { isInputListener = true; }
   private:
       virtual bool keyPressed(const OgreBites::KeyboardEvent& evt);
       virtual void frameRendered(const Ogre::FrameEvent& evt) override;
@@ -144,6 +144,8 @@ protected:
       bool dancing = false;
       bool right = true;
       Ogre::AnimationState* animationState;
+
+      bool isInputListener = false;
   };
 
   class Boya : public EntidadIG

@@ -16,16 +16,7 @@ EntidadIG::~EntidadIG()
 {
 }
 
-void EntidadIG::sendEvent(MessageType msj, EntidadIG* entidad)
-{
-	for (EntidadIG* e : appListeners)
-	{
-		if (e)
-		{
-			e->receiveEvent(msj, nullptr);
-		}
-	}
-}
+
 
 bool EntidadIG::keyPressed(const OgreBites::KeyboardEvent& evt)
 {

@@ -41,7 +41,6 @@ bool Molino::keyPressed(const OgreBites::KeyboardEvent& evt)
 		{
 			((Ogre::Entity*)o)->setMaterialName("Avion/Cuerpo");
 		}
-		sendEvent(EntidadIG::MessageType::emptyRiver, nullptr);
 	}
 	return true;
 }

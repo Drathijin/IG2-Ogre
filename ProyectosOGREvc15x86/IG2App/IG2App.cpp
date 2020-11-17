@@ -64,6 +64,9 @@ bool IG2App::keyPressed(const OgreBites::KeyboardEvent& evt)
 		  lunaNode->translate({ -150,0,0 }, Ogre::Node::TS_LOCAL);
 	  }
   }
+  else if(evt.keysym.sym == SDLK_r)
+	  EntidadIG::sendEvent(EntidadIG::MessageType::emptyRiver, nullptr);
+
   return true;
 }
 
@@ -142,7 +145,7 @@ void IG2App::setupScene(void)
  
 
   constexpr int scene = 5;
-  int option = 3;
+  int option = 0;
   switch (scene)
   {
   case 0:
@@ -347,22 +350,21 @@ void IG2App::startScene5(int option)
 	addInputListener(molino);
 	addInputListener(molino->aspas);
 
-	//Nodo* sinbad = nullptr;
-	//createEntity(sinbad, "sinbad", "Sinbad.mesh", baseSimbad->getNode())->scale(Vector3(20));
 	Nodo* carita;
 	helpers::createEntity(mSM, carita, "billboard", "sphere.mesh", parent, "Esfera/Cabeza");
 	carita->translate(Vector3(400, 27, -100));
 	carita->scale(Vector3(0.25));
 
-	//sinbad->translate({ 0,100,0 });
-	Simbad* simbad = new Simbad(baseSimbad->getNode());
+	Simbad* simbad = new Simbad(baseSimbad->getNode(), option == 0);
 	simbad->getNode()->scale({ 20,20,20 });
 	simbad->getNode()->translate({ 0,100,0 });
 	addInputListener(simbad);
-
-	Boya* boya = new Boya(parent);
-	addInputListener(boya);
-	//mSM->getLight("Luz")->setVisible(false);
+	
+	if (option == 0)
+	{
+		Boya* boya = new Boya(parent);
+		addInputListener(boya);
+	}
 }
 
 int IG2App::Plano::id = 0;
@@ -381,11 +383,6 @@ IG2App::Plano::Plano(Nodo* parent, float width, float height, std::string matNam
 	IG2App::Plano::id++;
 }
 
-bool IG2App::Plano::keyPressed(const OgreBites::KeyboardEvent& evt)
-{
-	return false;
-}
-
 void IG2App::Plano::receiveEvent(MessageType msj, EntidadIG* entidad)
 {
 	if (msj == EntidadIG::MessageType::emptyRiver && mEnt->getName()== "River")
@@ -394,12 +391,56 @@ void IG2App::Plano::receiveEvent(MessageType msj, EntidadIG* entidad)
 	}
 }
 
-IG2App::Simbad::Simbad(Nodo* parent) : EntidadIG(parent->createChildSceneNode())
+IG2App::Simbad::Simbad(Nodo* parent, bool listener) : EntidadIG(parent->createChildSceneNode())
 {
 	ent = mSM->createEntity("Sinbad.mesh");
-	//animationState =/* mSM->createAnimationState("Dance");*/
-	//ent->getAnimationState("RunTop");
-	//ent->getAnimationState("RunBase");
+	isInputListener = listener;
+	if (!isInputListener)
+	{
+		//anadimos la animacion para que camine de un punto a otro
+		float duration = 5.0f;
+		float rot = 1;
+		Animation* animation = mSM->createAnimation("WalkingCycle", duration);
+		NodeAnimationTrack* track = animation->createNodeTrack(0);
+		track->setAssociatedNode(mNode);
+		Real durPaso = duration / 2.0;
+		Vector3 keyframePos(0.0); Vector3 src(0, 0, 1); // posición y orientación iniciales 
+		TransformKeyFrame* kf; // 4 keyFrames: origen(0), giro (0.1), centro (0.9), giro(1)
+		Vector3 scale(20);
+
+		kf = track->createNodeKeyFrame(durPaso * 0); // Keyframe 0: origen
+		keyframePos += Ogre::Vector3::UNIT_Y * 100;
+		kf->setTranslate(keyframePos);
+		kf->setRotation(src.getRotationTo(Vector3(-1, 0, 1))); 
+		kf->setScale(scale);
+
+		kf = track->createNodeKeyFrame(durPaso * 0 + 0.1); // Keyframe 0.1: giro
+		kf->setTranslate(keyframePos); // Origen
+		kf->setRotation(src.getRotationTo(Vector3(1, 0, -1))); 
+		kf->setScale(scale);
+
+		kf = track->createNodeKeyFrame(durPaso * 0.9); // Keyframe 0.9: centro
+		keyframePos += Ogre::Vector3::UNIT_X * 500;
+		keyframePos -= Ogre::Vector3::UNIT_Z * 300;
+		kf->setTranslate(keyframePos); // Río
+		kf->setRotation(src.getRotationTo(Vector3(1, 0, -1))); 
+		kf->setScale(scale);
+
+
+		kf = track->createNodeKeyFrame(durPaso * 1); // Keyframe 1: giro
+		kf->setTranslate(keyframePos); // Origen
+		kf->setRotation(src.getRotationTo(Vector3(-1, 0, 1))); 
+		kf->setScale(scale);
+
+
+
+		animationState = mSM->createAnimationState("WalkingCycle");
+		animationState->setEnabled(true);
+		animationState->setLoop(true);
+
+	}
+	
+	//buscamos las dos animaciones de caminado
 	for (auto pair : ent->getAllAnimationStates()->getAnimationStates())
 	{
 		auto animationState = pair.second;
@@ -410,8 +451,6 @@ IG2App::Simbad::Simbad(Nodo* parent) : EntidadIG(parent->createChildSceneNode())
 		}
 	}
 
-
-
 	mNode->attachObject(ent);
 	right = true;
 	sword = mSM->createEntity("Sword.mesh");
@@ -420,7 +459,7 @@ IG2App::Simbad::Simbad(Nodo* parent) : EntidadIG(parent->createChildSceneNode())
 
 bool IG2App::Simbad::keyPressed(const OgreBites::KeyboardEvent& evt)
 {
-	if (evt.keysym.sym == SDLK_c)
+	if (evt.keysym.sym == SDLK_c && isInputListener)
 	{
 		walking = !walking;
 		dancing = !dancing;
@@ -440,7 +479,7 @@ bool IG2App::Simbad::keyPressed(const OgreBites::KeyboardEvent& evt)
 			}
 		}
 	}
-	else if (evt.keysym.sym == SDLK_e)
+	else if (evt.keysym.sym == SDLK_e && isInputListener)
 	{
 		ent->detachObjectFromBone(sword);
 		right = !right;
@@ -457,8 +496,9 @@ void IG2App::Simbad::frameRendered(const Ogre::FrameEvent& evt)
 		if (animationState->getEnabled())
 			animationState->addTime(evt.timeSinceLastFrame);
 	}
-}
-;
+	if(!isInputListener)
+		animationState->addTime(evt.timeSinceLastFrame);
+};
 
 IG2App::Boya::Boya(Nodo* parent)
 	: EntidadIG(parent->createChildSceneNode())
@@ -469,13 +509,12 @@ IG2App::Boya::Boya(Nodo* parent)
 
 	float duration = 25.0f;
 	float longDesplazamiento = 20.0f;
-	Animation* animation = mSM->createAnimation("animVV", duration);
+	Animation* animation = mSM->createAnimation("BoyaRotation", duration);
 	NodeAnimationTrack* track = animation->createNodeTrack(0);
 	track->setAssociatedNode(mNode);
-	//Vector3 keyframePos(-10., 0., 100.);
 	Real durPaso = duration / 5.0;
 	Vector3 keyframePos(0.0); Vector3 src(0, 0, 1); // posición y orientación iniciales
-	TransformKeyFrame* kf; // 4 keyFrames: origen(0), abajo, arriba, origen(3)
+	TransformKeyFrame* kf; // 5 keyFrames: origen(0), abajo, origen (2), arriba, origen(4)
 	kf = track->createNodeKeyFrame(durPaso * 0); // Keyframe 0: origen
 	kf->setScale(Vector3(20));
 
@@ -504,16 +543,16 @@ IG2App::Boya::Boya(Nodo* parent)
 
 
 	
-	kf = track->createNodeKeyFrame(durPaso * 4); // Keyframe 3: origen
+	kf = track->createNodeKeyFrame(durPaso * 4); // Keyframe 4: origen
 	keyframePos -= Ogre::Vector3::NEGATIVE_UNIT_Y * longDesplazamiento;
-	kf->setTranslate(keyframePos); // Abajo
-	kf->setRotation(src.getRotationTo(Vector3(1, 0, 1))); // Yaw(45)
+	kf->setTranslate(keyframePos); // Centro
+	kf->setRotation(src.getRotationTo(Vector3(-1, 0, 1))); // Yaw(45)
 	kf->setScale(Vector3(20)); 
 
 
 	mNode->attachObject(ent);
 
-	animationState = mSM->createAnimationState("animVV");
+	animationState = mSM->createAnimationState("BoyaRotation");
 	animationState->setEnabled(true);
 	animationState->setLoop(true);
 }

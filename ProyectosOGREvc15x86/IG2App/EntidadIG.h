@@ -34,9 +34,19 @@ public:
 	};
 	static std::vector<EntidadIG*> appListeners;
 	static void addListener(EntidadIG* entidad) { appListeners.push_back(entidad);};
-	void sendEvent(MessageType msj, EntidadIG* entidad);
 	virtual void receiveEvent(MessageType msj, EntidadIG* entidad) {};
 	virtual Ogre::SceneNode* getNode() { return mNode; };
+
+	static void sendEvent(MessageType msj, EntidadIG* entidad)
+	{
+		for (EntidadIG* e : appListeners)
+		{
+			if (e)
+			{
+				e->receiveEvent(msj, entidad);
+			}
+		}
+	}
 protected:
 	Ogre::SceneNode* mNode;
 	Ogre::SceneManager* mSM;
