@@ -51,7 +51,8 @@ Avion::Avion(Nodo* parent) :
 	lightNode->attachObject(planeLight);
 	lightNode->translate({ 0,-40,0 });
 
-	mSM->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
+	cartel = mNode->createChildSceneNode();
+
 }
 
 

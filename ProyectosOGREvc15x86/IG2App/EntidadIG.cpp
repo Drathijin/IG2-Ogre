@@ -24,3 +24,4 @@ bool EntidadIG::keyPressed(const OgreBites::KeyboardEvent& evt)
 	}*/
 	return true;
 }
+

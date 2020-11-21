@@ -25,6 +25,7 @@ private:
     Nodo* pilotoNode = nullptr;
     Nodo* heliceNodeL = nullptr;
     Nodo* heliceNodeR = nullptr;
+    Nodo* cartel = nullptr;
     Ogre::Light* planeLight = nullptr;
 
     virtual bool keyPressed(const OgreBites::KeyboardEvent& evt);

@@ -5,6 +5,7 @@
 #include <OgreInput.h>
 #include <SDL_keycode.h>
 #include <OgreSceneNode.h>
+using Nodo = Ogre::SceneNode;
 
 class Obj : public OgreBites::InputListener
 {
@@ -26,7 +27,7 @@ public:
 		mNode = node;
 		addListener(this);
 	}
-	~EntidadIG();
+	virtual ~EntidadIG();
 	enum class MessageType
 	{
 		update = 0,
