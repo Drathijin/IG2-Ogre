@@ -4,6 +4,7 @@
 #include <OgreSceneNode.h>
 #include <OgreTrays.h>
 #include <OgreCameraMan.h>
+#include <OgreParticleSystem.h>
 #include "EntidadIG.h";
 #include "Aspas.h"
 
@@ -27,6 +28,7 @@ private:
     Nodo* heliceNodeR = nullptr;
     Nodo* cartel = nullptr;
     Ogre::Light* planeLight = nullptr;
+    Ogre::ParticleSystem* smoke = nullptr;
 
     virtual bool keyPressed(const OgreBites::KeyboardEvent& evt);
 

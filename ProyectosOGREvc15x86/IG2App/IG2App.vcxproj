@@ -144,6 +144,7 @@
   <ItemGroup>
     <None Include="..\bin\plugins.cfg" />
     <None Include="..\bin\resources.cfg" />
+    <None Include="..\media\IG2App\IG2App.particle" />
     <None Include="..\media\IG2App\Practica1.material" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

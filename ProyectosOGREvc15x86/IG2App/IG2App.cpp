@@ -88,7 +88,6 @@ void IG2App::setupScene(void)
   mCamNode->lookAt(Ogre::Vector3(0, 0, 0), Ogre::Node::TS_WORLD);
   //mCamNode->setDirection(Ogre::Vector3(0, 0, -1));  
 
-  mSM->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 
   // and tell it to render into the main window
   Viewport* vp = getRenderWindow()->addViewport(cam);
@@ -111,7 +110,7 @@ void IG2App::setupScene(void)
   mLightNode->attachObject(luz);
 
   //mLightNode->setPosition(0, 0, 1000);
- 
+
   //------------------------------------------------------------------------
  
 

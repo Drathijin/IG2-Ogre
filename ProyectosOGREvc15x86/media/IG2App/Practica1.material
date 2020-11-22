@@ -45,6 +45,20 @@ material Avion/Piloto
         }
     }
 }
+
+material Avion/Cartel
+{
+    technique
+    {
+        pass
+        {
+            ambient 0.7 0.7 0
+            diffuse 1.0 1.0 1.0
+
+        }
+    }
+}
+
 material Aspas/Tabla
 {
     technique
@@ -174,6 +188,25 @@ material Esfera/Cabeza
 		    {
 			    texture spotlight_image.png
                 env_map spherical
+            }
+        }
+    }
+}
+
+material IG2App/Smoke
+{
+    technique
+    {
+        pass
+        {
+            lighting off
+            scene_blend alpha_blend
+            depth_write off
+            diffuse vertexcolour
+            texture_unit
+            {
+                texture smoke.png
+                tex_address_mode clamp
             }
         }
     }

@@ -1,7 +1,8 @@
 #pragma once
 #include "Avion.h"
 #include "IG2App.h"
-
+#include <OgreBillboardSet.h>
+#include <OgreBillboard.h>
 Avion::Avion(Nodo* parent) :
 	EntidadIG(parent->createChildSceneNode())
 {
@@ -25,7 +26,7 @@ Avion::Avion(Nodo* parent) :
 	right = new AspasMolino(5, 1, heliceNodeR, 2000);
 	heliceNodeR->translate({ -offset,0,50 });
 
-	helpers::createEntity(mSM, botoncico, "boton879879754321xD", "Barrel.mesh", mNode, "Avion/Botoncico")->pitch(Ogre::Degree(90));
+	helpers::createEntity(mSM, botoncico, "botoncicoAvion", "Barrel.mesh", mNode, "Avion/Botoncico")->pitch(Ogre::Degree(90));
 	botoncico->translate({ 0,0,100 });
 	botoncico->scale({ 10,2,10 });
 
@@ -40,6 +41,7 @@ Avion::Avion(Nodo* parent) :
 	planeLight->setSpotlightOuterAngle(Ogre::Degree(90));
 
 
+	/*Esto es el código del profe Ana*/
 	//planeLight->setDiffuseColour(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
 	//planeLight->setDirection(Ogre::Vector3(1, -1, 0));
 	//planeLight->setSpotlightInnerAngle(Ogre::Degree(5.0f));
@@ -51,8 +53,25 @@ Avion::Avion(Nodo* parent) :
 	lightNode->attachObject(planeLight);
 	lightNode->translate({ 0,-40,0 });
 
+	auto ent = mSM->createEntity(Ogre::SceneManager::PrefabType::PT_PLANE);
+	auto set = mSM->createBillboardSet(1);
+	set->setBillboardOrigin(Ogre::BillboardOrigin::BBO_CENTER_RIGHT);
+	set->setMaterialName("Avion/Alas");
+	auto billboard = set->createBillboard(Ogre::Vector3(0,0,0));
+	//set->setBillboardOrigin(BBO_CENTER);
+	billboard->setDimensions(250, 100);
+	
 	cartel = mNode->createChildSceneNode();
+	cartel->attachObject(set);
+	cartel->translate({ -100, 0, 0});
 
+	//creamos el sistema de particulas
+	smoke = mSM->createParticleSystem("psSmoke", "IG2App/Explosion");
+	smoke->setMaterialName("IG2App/Smoke");
+	smoke->setEmitting(false);
+	mNode->attachObject(smoke);
+
+	mSM->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 }
 
 
@@ -61,7 +80,21 @@ bool Avion::keyPressed(const OgreBites::KeyboardEvent& evt)
 	if (evt.keysym.sym == SDLK_r)
 	{
 		spin = false;
+		
+		//hacemos que el avion desaparezca
+		mCuerpoNode->setVisible(false);
+		malaINode->setVisible(false);
+		malaDNode->setVisible(false);
+		botoncico->setVisible(false);
+		pilotoNode->setVisible(false);
+		heliceNodeL->setVisible(false);
+		heliceNodeR->setVisible(false);
+		cartel->setVisible(false);
+		
 		planeLight->setVisible(false);
+
+		//hacemos que aparezca el humo
+		smoke->setEmitting(true);
 	}
 	return true;
 }
@@ -72,12 +105,14 @@ void Avion::frameRendered(const Ogre::FrameEvent& evt)
 	right->girarAspas(evt.timeSinceLastEvent);
 	float delta = evt.timeSinceLastEvent;
 
-	float x = 200;
-	float z = 200;
+	printf("Delta: %f \n", delta);
+	
+	constexpr float x = 200;
+	constexpr float z = 200;
 	if (spin)
 	{
 		mNode->translate({ x,-200,z }, Ogre::Node::TS_LOCAL);
-		mNode->yaw(Ogre::Degree(20 * delta));
+		mNode->yaw(Ogre::Degree(30.0 * delta));
 		mNode->translate({ -x,200,-z }, Ogre::Node::TS_LOCAL);
 	}
 
