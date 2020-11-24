@@ -54,6 +54,10 @@ material Avion/Cartel
         {
             ambient 0.7 0.7 0
             diffuse 1.0 1.0 1.0
+            texture_unit
+            {
+                texture 10points.png
+            }
 
         }
     }
