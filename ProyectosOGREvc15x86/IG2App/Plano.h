@@ -1,5 +1,7 @@
 #pragma once
 #include "EntidadIG.h"
+#include <OgreRenderTarget.h>
+#include <OgreRenderTargetListener.h>
 
 
 class Plano : public EntidadIG
@@ -12,7 +14,7 @@ public:
 protected:
     Ogre::Entity* mEnt = nullptr;
 };
-class Rio : public EntidadIG
+class Rio : public EntidadIG, public Ogre::RenderTargetListener
 {
 public:
     Rio(Nodo* parent, float width, float height, std::string string = "");
@@ -21,6 +23,10 @@ public:
     virtual void receiveEvent(MessageType msj, EntidadIG* entidad);
     void setReflejo(Ogre::Camera* cam);
     Ogre::Camera* getCam() { return camRef; }
+
+
+    virtual void preRenderTargetUpdate(const Ogre::RenderTargetEvent& evt);
+    virtual void postRenderTargetUpdate(const Ogre::RenderTargetEvent& evt);
 private:
     Ogre::MovablePlane* mpRef = nullptr;
     Ogre::Entity* mEnt = nullptr;

@@ -80,6 +80,7 @@ bool Avion::keyPressed(const OgreBites::KeyboardEvent& evt)
 		//hacemos que aparezca el humo
 		smoke->setEmitting(true);
 		dead = 1;
+
 	}
 	return true;
 }

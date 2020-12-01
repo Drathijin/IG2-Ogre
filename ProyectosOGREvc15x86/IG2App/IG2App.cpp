@@ -144,9 +144,9 @@ void IG2App::setupScene(void)
   auto node = mSM->getRootSceneNode()->createChildSceneNode();
   auto whateva = mSM->createEntity(p);
   
-  //mSM->setSkyPlane(true, Plane(Vector3::UNIT_Z, -20), "IG2/space", 1, 1, true, 1.0, 10, 10);
+  mSM->setSkyPlane(true, Plane(Vector3::UNIT_Z, -20), "IG2/space", 1, 1, true, 1.0, 10, 10);
   
-  mSM->setSkyPlane(true, Plane(Vector3::UNIT_Z, -200), "IG2/space", 1, 1, true, 0.0, 10, 10);
+  //mSM->setSkyPlane(true, Plane(Vector3::UNIT_Z, -200), "IG2/space", 1, 1, true, 0.0, 10, 10);
 
 
   //------------------------------------------------------------------------
@@ -155,27 +155,33 @@ void IG2App::startScene5(int option)
 {
 	Nodo* parent = mSM->getRootSceneNode()->createChildSceneNode();
 	base = new Rio(parent, 1200, 800, "IG2/Reflejo");
-	this->mCamNode->attachObject(base->getCam());
 	base->setReflejo((Ogre::Camera*)this->mCamNode->getAttachedObject("Cam"));
+	//this->mCamNode->attachObject(base->getCam());
+
+	
 
 	Plano* baseMolino = new Plano(parent, 500, 500, "Plano/Molino");
-	baseMolino->getNode()->translate({ 350,2,-150 });
+	baseMolino->getNode()->translate({ 785,2,-385});
+
+
+
+	Molino* molino = new Molino(mSM, 12, parent);
+	molino->getNode()->translate({ 350 + (785 - 350),142,-130 - 235 });
+	addInputListener(molino);
+	addInputListener(molino->aspas);
 
 	Avion* avion = new Avion(parent);
 	avion->getNode()->scale(Vector3(0.3));
-	avion->getNode()->translate({ 350 - 100, 200, -130 - 100 });
+	avion->getNode()->setPosition(molino->getNode()->getPosition());
+	avion->getNode()->translate({ -200, 0 ,-200 }, Ogre::Node::TS_LOCAL);
+
 	addInputListener(avion);
 	addInputListener(avion->left);
 	addInputListener(avion->right);
 
-	Molino* molino = new Molino(mSM, 12, parent);
-	molino->getNode()->translate({ 350,142,-130 });
-	addInputListener(molino);
-	addInputListener(molino->aspas);
-
 	Nodo* carita;
 	helpers::createEntity(mSM, carita, "billboard", "sphere.mesh", parent, "Esfera/Cabeza");
-	carita->translate(Vector3(400, 27, -100));
+	carita->translate(Vector3(400+(785-350), 27, -100 - 235));
 	carita->scale(Vector3(0.25));
 
 	Simbad* simbad = new Simbad(parent, option == 0);
