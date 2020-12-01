@@ -75,9 +75,11 @@ Simbad::Simbad(Nodo* parent, bool listener) : EntidadIG(parent->createChildScene
 
 bool Simbad::keyPressed(const OgreBites::KeyboardEvent& evt)
 {
-	if (evt.keysym.sym == SDLK_r && isInputListener)
+	static bool dead = false;
+	if (evt.keysym.sym == SDLK_r && isInputListener && !dead)
 	{
 		walking = !walking;
+		dead = 1;
 		//dancing = !dancing;
 		for (auto pair : ent->getAllAnimationStates()->getAnimationStates())
 		{

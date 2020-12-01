@@ -35,6 +35,8 @@ bool IG2App::keyPressed(const OgreBites::KeyboardEvent& evt)
   }
   else if(evt.keysym.sym == SDLK_r)
 	  EntidadIG::sendEvent(EntidadIG::MessageType::emptyRiver, nullptr);
+  
+
 
   return true;
 }
@@ -138,16 +140,23 @@ void IG2App::setupScene(void)
   
   //mCamMgr->setTarget(mSinbadNode);  
   //mCamMgr->setYawPitchDist(Radian(0), Degree(30), 100);
+  
+  auto node = mSM->getRootSceneNode()->createChildSceneNode();
+  auto whateva = mSM->createEntity(p);
+  
+  //mSM->setSkyPlane(true, Plane(Vector3::UNIT_Z, -20), "IG2/space", 1, 1, true, 1.0, 10, 10);
+  
+  mSM->setSkyPlane(true, Plane(Vector3::UNIT_Z, -200), "IG2/space", 1, 1, true, 0.0, 10, 10);
+
 
   //------------------------------------------------------------------------
 }
 void IG2App::startScene5(int option)
 {
 	Nodo* parent = mSM->getRootSceneNode()->createChildSceneNode();
-	Plano* base = new Plano(parent, 1200, 800, "Plano/Agua", "River");
-
-	Plano* baseSimbad = new Plano(parent, 200, 200, "Plano/Sinbad");
-	baseSimbad->getNode()->translate({ -500,2,300 });
+	base = new Rio(parent, 1200, 800, "IG2/Reflejo");
+	this->mCamNode->attachObject(base->getCam());
+	base->setReflejo((Ogre::Camera*)this->mCamNode->getAttachedObject("Cam"));
 
 	Plano* baseMolino = new Plano(parent, 500, 500, "Plano/Molino");
 	baseMolino->getNode()->translate({ 350,2,-150 });

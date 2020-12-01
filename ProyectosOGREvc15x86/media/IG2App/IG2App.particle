@@ -45,13 +45,13 @@ particle_system IG2App/SmokeTrail
 { // p. s. attributes
 	renderer billboard
 	billboard_type point
-	particle_width 35
-	particle_height 35
+	particle_width 15
+	particle_height 15
 	quota 500
 	material IG2App/Smoke
 	emitter Point
 	{ // e. attributes
-		direction 0 1 0
+		direction 0 0 0
 		angle 180
 		emission_rate 15
 		time_to_live 4

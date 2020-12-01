@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
     app.getRoot()->startRendering();
   }
   catch (Ogre::Exception& e) {
-    Ogre::LogManager::getSingleton().logMessage("An exception has occured: " + e.getFullDescription() + "\n");
+    Ogre::LogManager::getSingleton().logMessage("\033[0;31m An exception has occured: " + e.getFullDescription() + "\033[0m \n ");
   }
   app.closeApp();
   return 0;

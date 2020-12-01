@@ -27,8 +27,8 @@ private:
     Nodo* heliceNodeL = nullptr;
     Nodo* heliceNodeR = nullptr;
     Nodo* cartel = nullptr;
-    Ogre::Light* planeLight = nullptr;
     Ogre::ParticleSystem* smoke = nullptr;
+    Ogre::ParticleSystem* trail = nullptr;
 
     virtual bool keyPressed(const OgreBites::KeyboardEvent& evt);
 

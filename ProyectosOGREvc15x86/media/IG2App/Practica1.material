@@ -136,13 +136,31 @@ material Plano/Agua
                 scroll_anim -0.1 0.0
             }
         }
+    }
+}
+material IG2/Reflejo
+{
+    technique
+    {
         pass
         {
-        
+            textture_unit
+            {
+                color_op modulate
+                env_map planar
+            }
             texture_unit
 		    {
 			    texture BeachStones.jpg
             }
+            texture_unit
+		    {
+			    texture Water02.jpg
+                scroll_anim -0.1 0.0
+
+            }
+
+
         }
     }
 }
@@ -211,6 +229,29 @@ material IG2App/Smoke
             {
                 texture smoke.png
                 tex_address_mode clamp
+            }
+        }
+    }
+}
+
+material IG2/space
+{
+    technique
+    {
+        pass
+        {
+
+            texture_unit
+		    {
+			    texture  lightMap.jpg
+                color_op add
+                rotate_anim .00005
+            }
+            texture_unit
+		    {
+			    texture  spaceSky.jpg
+                color_op modulate
+                rotate_anim .00005
             }
         }
     }

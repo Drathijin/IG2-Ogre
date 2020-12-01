@@ -9,6 +9,7 @@
 #include "EntidadIG.h";
 #include "Aspas.h"
 #include "Avion.h"
+#include "Plano.h"
 #include "Molino.h"
 
 using Nodo = Ogre::SceneNode;
@@ -50,7 +51,7 @@ protected:
 
   Nodo* mLightNode = nullptr;
   Nodo* mCamNode = nullptr;
-
+  Rio* base;
 
 //  Avion* avion = nullptr;
 
