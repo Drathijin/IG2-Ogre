@@ -245,13 +245,12 @@ material IG2/space
 		    {
 			    texture  lightMap.jpg
                 color_op add
-                rotate_anim .00005
             }
             texture_unit
 		    {
 			    texture  spaceSky.jpg
                 color_op modulate
-                rotate_anim .00005
+                rotate_anim .005
             }
         }
     }
