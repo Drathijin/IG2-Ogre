@@ -64,9 +64,6 @@ Rio::Rio(Nodo* parent, float width, float height, std::string matName): EntidadI
 
 	//mNode->scale(width / 120, height / 120, 1);
 
-
-
-
 	// LBO_ADD / LBO_ALPHA_BLEND / LBO_REPLACE
 }
 
@@ -80,28 +77,28 @@ void Rio::receiveEvent(MessageType msj, EntidadIG* entidad)
 
 void Rio::setReflejo(Ogre::Camera* cam)
 {
-	Ogre::SceneNode* quieroMorir = cam->getParentSceneNode()->createChildSceneNode();
+	Ogre::SceneNode* nodoAuxiliar = cam->getParentSceneNode();
 	camRef = mSM->createCamera("RefCam");
 	camRef->setNearClipDistance(1);
 	camRef->setFarClipDistance(1000000000);
 	camRef->setAutoAspectRatio(true);
 
-	quieroMorir->setPosition(0, -500, 1000);
-	quieroMorir->lookAt({ 0,0,0 }, Ogre::Node::TS_WORLD);
+	nodoAuxiliar->setPosition(0, -500, 1000);
+	nodoAuxiliar->lookAt({ 0,0,0 }, Ogre::Node::TS_WORLD);
 
-	quieroMorir->attachObject(camRef);
 	camRef->enableReflection(mpRef);
 	camRef->enableCustomNearClipPlane(mpRef);
+	nodoAuxiliar->attachObject(camRef);
 
 	camRef->setAspectRatio(
-		(Ogre::Real)cam->getViewport()->getActualWidth()/ // widht ejemplo
+		(Ogre::Real)cam->getViewport()->getActualWidth()/ // width ejemplo
 		(Ogre::Real)cam->getViewport()->getActualHeight());
 
 	Ogre::TexturePtr rttRef = Ogre::TextureManager::getSingleton().createManual(
 		"rttReflejo", // name ejemplo -> (*)
 		Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
 		Ogre::TEX_TYPE_2D,
-		(Ogre::Real)cam->getViewport()->getActualWidth(), // widht ejemplo
+		(Ogre::Real)cam->getViewport()->getActualWidth(), // width ejemplo
 		(Ogre::Real)cam->getViewport()->getActualHeight(), // height ejemplo
 		0, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET);
 	Ogre::RenderTexture* renderTexture =rttRef->getBuffer()->getRenderTarget();
@@ -112,10 +109,10 @@ void Rio::setReflejo(Ogre::Camera* cam)
 	Ogre::TextureUnitState* tu = mEnt->getSubEntity(0)->getMaterial()->
 		getTechnique(0)->getPass(0)->
 		createTextureUnitState("rttReflejo"); //<- (*) 
-	tu->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP); // black/white background?
-
+	
 	tu-> setProjectiveTexturing(true, camRef);
 
+	//se llama al update si tenemos esto puesto
 	renderTexture->addListener(dynamic_cast<Ogre::RenderTargetListener*>(this));
 }
 

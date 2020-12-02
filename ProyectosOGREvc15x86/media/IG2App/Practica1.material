@@ -240,7 +240,6 @@ material IG2/space
     {
         pass
         {
-
             texture_unit
 		    {
 			    texture  lightMap.jpg

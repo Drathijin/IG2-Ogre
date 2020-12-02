@@ -145,7 +145,6 @@ void IG2App::setupScene(void)
   auto whateva = mSM->createEntity(p);
   
   mSM->setSkyPlane(true, Plane(Vector3::UNIT_Z, -20), "IG2/space", 1, 1, true, 1.0, 10, 10);
-  
   //mSM->setSkyPlane(true, Plane(Vector3::UNIT_Z, -200), "IG2/space", 1, 1, true, 0.0, 10, 10);
 
 
