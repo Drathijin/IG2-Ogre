@@ -1,0 +1,45 @@
+vertex_program Ejercicio1VS glsl
+{
+    source SpaceVS.glsl
+    default_params
+    {
+        param_named_auto modelViewProjMat worldviewproj_matrix
+
+    }
+}
+fragment_program Ejercicio1FS glsl
+{
+    source SpaceFS.glsl
+    default_params
+    {
+        param_named materialTex0 int 0;
+        param_named materialTex1 int 1;
+    }
+}
+
+material IG2/spaceGLSL
+{
+    technique
+    {
+        pass
+		{
+            vertex_program_ref Ejercicio1VS 
+            {
+                param_named_auto SinTiempo sintime_0_2pi 32
+            }
+            fragment_program_ref Ejercicio1FS {}
+            texture_unit
+            {
+                texture lightMap.jpg 2d
+                tex_address_mode wrap
+            }
+        
+            texture_unit
+            {
+                texture spaceSky.jpg 2d
+                tex_address_mode wrap
+            }
+
+        }
+    }
+}

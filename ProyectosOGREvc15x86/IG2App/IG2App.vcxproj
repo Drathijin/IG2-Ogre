@@ -148,6 +148,9 @@
     <None Include="..\bin\resources.cfg" />
     <None Include="..\media\IG2App\IG2App.particle" />
     <None Include="..\media\IG2App\Practica1.material" />
+    <None Include="..\media\IG2App\practicaGLSL.material" />
+    <None Include="..\media\IG2App\SpaceFS.glsl" />
+    <None Include="..\media\IG2App\SpaceVS.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -92,5 +92,14 @@
     <None Include="..\media\IG2App\IG2App.particle">
       <Filter>Archivos de recursos</Filter>
     </None>
+    <None Include="..\media\IG2App\practicaGLSL.material">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="..\media\IG2App\SpaceFS.glsl">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="..\media\IG2App\SpaceVS.glsl">
+      <Filter>Archivos de recursos</Filter>
+    </None>
   </ItemGroup>
 </Project>

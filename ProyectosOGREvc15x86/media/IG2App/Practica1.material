@@ -144,11 +144,6 @@ material IG2/Reflejo
     {
         pass
         {
-            textture_unit
-            {
-                color_op modulate
-                env_map planar
-            }
             texture_unit
 		    {
 			    texture BeachStones.jpg
