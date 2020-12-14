@@ -146,6 +146,8 @@
   <ItemGroup>
     <None Include="..\bin\plugins.cfg" />
     <None Include="..\bin\resources.cfg" />
+    <None Include="..\media\IG2App\BoyaFS.glsl" />
+    <None Include="..\media\IG2App\BoyaVS.glsl" />
     <None Include="..\media\IG2App\IG2App.particle" />
     <None Include="..\media\IG2App\Practica1.material" />
     <None Include="..\media\IG2App\practicaGLSL.material" />

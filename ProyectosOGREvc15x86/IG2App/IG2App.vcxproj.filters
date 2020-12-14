@@ -101,5 +101,11 @@
     <None Include="..\media\IG2App\SpaceVS.glsl">
       <Filter>Archivos de recursos</Filter>
     </None>
+    <None Include="..\media\IG2App\BoyaFS.glsl">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="..\media\IG2App\BoyaVS.glsl">
+      <Filter>Archivos de recursos</Filter>
+    </None>
   </ItemGroup>
 </Project>

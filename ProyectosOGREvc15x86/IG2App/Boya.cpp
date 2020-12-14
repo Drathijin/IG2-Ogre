@@ -11,8 +11,8 @@ using namespace Ogre;
 Boya::Boya(Nodo* parent)
 	: EntidadIG(parent->createChildSceneNode())
 {
-	ent = mSM->createEntity("Barrel.mesh");
-	ent->setMaterialName("Avion/Alas");
+	ent = mSM->createEntity("uv_sphere.mesh");
+	ent->setMaterialName("IG2/boyaGLSL");
 
 
 	float duration = 25.0f;
@@ -24,14 +24,12 @@ Boya::Boya(Nodo* parent)
 	Vector3 keyframePos(0.0); Vector3 src(0, 0, 1); // posición y orientación iniciales
 	TransformKeyFrame* kf; // 5 keyFrames: origen(0), abajo, origen (2), arriba, origen(4)
 	kf = track->createNodeKeyFrame(durPaso * 0); // Keyframe 0: origen
-	kf->setScale(Vector3(20));
 
 
 	kf = track->createNodeKeyFrame(durPaso * 1); // Keyframe 1: arriba
 	keyframePos += Ogre::Vector3::UNIT_Y * longDesplazamiento * 2;
 	kf->setTranslate(keyframePos); // Arriba
 	kf->setRotation(src.getRotationTo(Vector3(-1, 0, 1))); // Yaw(-45)
-	kf->setScale(Vector3(20));
 
 
 
@@ -39,7 +37,6 @@ Boya::Boya(Nodo* parent)
 	keyframePos -= Ogre::Vector3::UNIT_Y * longDesplazamiento * 2;
 	kf->setTranslate(keyframePos); // Centro
 	kf->setRotation(src.getRotationTo(Vector3(-1, 0, 1))); // Yaw(-45)
-	kf->setScale(Vector3(20));
 
 
 
@@ -47,7 +44,6 @@ Boya::Boya(Nodo* parent)
 	keyframePos += Ogre::Vector3::NEGATIVE_UNIT_Y * longDesplazamiento;
 	kf->setTranslate(keyframePos); // Abajo
 	kf->setRotation(src.getRotationTo(Vector3(1, 0, 1))); // Yaw(45)
-	kf->setScale(Vector3(20));
 
 
 
@@ -55,7 +51,6 @@ Boya::Boya(Nodo* parent)
 	keyframePos -= Ogre::Vector3::NEGATIVE_UNIT_Y * longDesplazamiento;
 	kf->setTranslate(keyframePos); // Centro
 	kf->setRotation(src.getRotationTo(Vector3(-1, 0, 1))); // Yaw(45)
-	kf->setScale(Vector3(20));
 
 
 	mNode->attachObject(ent);

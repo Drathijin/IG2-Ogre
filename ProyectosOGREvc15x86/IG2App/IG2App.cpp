@@ -190,7 +190,7 @@ void IG2App::startScene5(int option)
 	
 	if (option == 0)
 	{
-		Boya* boya = new Boya(parent);
+ 		Boya* boya = new Boya(parent);
 		addInputListener(boya);
 	}
 }
