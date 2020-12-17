@@ -23,11 +23,14 @@ vertex_program BoyaVS glsl
     {
         param_named_auto modelViewProjMat worldviewproj_matrix
         param_named_auto modelViewMat worldview_matrix
-        param_named_auto normalMat inverse_transpose_worldview_matrix
+        param_named_auto normalMat inverse_transpose_world_matrix
+
 
         param_named lightAmbient float3 1 1 1
+        //param_named materialDiffuse float3 .1 .1 .1
 
-        param_named materialDiffuse float3 1 1 1
+        param_named InColor float4 0.61 0.61 .05 1.0 
+        param_named OutColor float4 0.2 0.35 .15 1.0 
         
     }
 }
@@ -40,9 +43,13 @@ fragment_program BoyaFS glsl
         param_named materialTex1 int 1;
 
         
-        param_named lightDiffuse float3 1 1 0 
-        param_named lightPosition float4 1 0 0 0
-        param_named materialDiffuse float3 1 1 1
+        param_named_auto lightDiffuse light_diffuse_colour 0 //float3 0 1 0 
+        param_named_auto lightPosition light_position_view_space 0//float4 1000 1 0 0
+        //param_named materialDiffuse float3 .1 .1 .1
+
+        param_named InColor float4 0.61 0.61 .05 1.0 
+        param_named OutColor float4 0.2 0.35 .15 1.0 
+
     }
 }
 material IG2/spaceGLSL
@@ -78,15 +85,10 @@ material IG2/boyaGLSL
         pass
 		{
             vertex_program_ref BoyaVS 
-            {
-                
-
-                
+            { 
             }
             fragment_program_ref BoyaFS 
             {
-                //param_named InColor float4 0.5 0.5 0.5 1
-                //param_named OutColor float4 0 0 1 1
             }
             texture_unit
             {
@@ -99,9 +101,8 @@ material IG2/boyaGLSL
                 texture BumpyMetal.jpg 2d
                 tex_address_mode wrap
             }
-        
-                cull_hardware none
-                cull_software none
+            cull_hardware none
+            cull_software none
 
         }
     }
