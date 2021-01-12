@@ -6,6 +6,7 @@
 #include <OgreInput.h>
 #include <SDL_keycode.h>
 #include <OgreMeshManager.h>
+#include <OgreCompositorManager.h>
 #include <iostream>
 #include "Plano.h"
 #include "Simbad.h"
@@ -14,6 +15,8 @@
 
 using namespace Ogre;
 bool IG2App::hayArray = false;
+bool lines =false;
+bool bw = false;
 
 Nodo* helpers::createEntity(Ogre::SceneManager* sm, Nodo*& Node, std::string id, std::string mesh, Nodo* parent, std::string material)
 {
@@ -35,8 +38,16 @@ bool IG2App::keyPressed(const OgreBites::KeyboardEvent& evt)
   }
   else if(evt.keysym.sym == SDLK_r)
 	  EntidadIG::sendEvent(EntidadIG::MessageType::emptyRiver, nullptr);
-  
-
+  else if(evt.keysym.sym == SDLK_l)
+  {
+    bw = !bw;
+    CompositorManager::getSingleton().setCompositorEnabled(getRenderWindow()->getViewport(0), "Luminance", bw);
+  }
+  else if(evt.keysym.sym == SDLK_k)
+  {
+    lines = !lines;
+    CompositorManager::getSingleton().setCompositorEnabled(getRenderWindow()->getViewport(0), "EdgeEmboss", lines);
+  }
 
   return true;
 }
@@ -114,7 +125,14 @@ void IG2App::setupScene(void)
   //mLightNode->setPosition(0, 0, 1000);
 
   //------------------------------------------------------------------------
- 
+
+  //anadimos el compositor Luminance al viewport
+  CompositorManager::getSingleton().addCompositor(vp, "Luminance");
+  //CompositorManager::getSingleton().setCompositorEnabled(vp, "Luminance", true);
+
+  CompositorManager::getSingleton().addCompositor(vp, "EdgeEmboss");
+  //CompositorManager::getSingleton().setCompositorEnabled(vp, "EdgeEmboss", true);
+  
 
   constexpr int scene = 5;
   int option = 0;

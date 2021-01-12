@@ -3,6 +3,7 @@
 
 uniform sampler2D materialTex0;
 uniform sampler2D materialTex1;
+uniform float flipping;
 
 uniform vec3 lightDiffuse;
 uniform vec4 lightPosition;
@@ -48,7 +49,9 @@ void main()
 	
 	vec3 m2  = vec3(texture(materialTex1, vUv0));
 	
-	if(gl_FrontFacing)
+	bool frontFace = (flipping > -1) ? gl_FrontFacing : !gl_FrontFacing;
+
+	if(frontFace)
 		m1 = vec3(outColor);
 	else 
 		m1 = vec3(inColor);

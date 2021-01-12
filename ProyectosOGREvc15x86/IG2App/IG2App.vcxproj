@@ -148,7 +148,11 @@
     <None Include="..\bin\resources.cfg" />
     <None Include="..\media\IG2App\BoyaFS.glsl" />
     <None Include="..\media\IG2App\BoyaVS.glsl" />
+    <None Include="..\media\IG2App\ExampleVS.glsl" />
     <None Include="..\media\IG2App\IG2App.particle" />
+    <None Include="..\media\IG2App\IG2BlackWhite.compositor" />
+    <None Include="..\media\IG2App\Kernel3x3PS.glsl" />
+    <None Include="..\media\IG2App\LuminancePS.glsl" />
     <None Include="..\media\IG2App\Practica1.material" />
     <None Include="..\media\IG2App\practicaGLSL.material" />
     <None Include="..\media\IG2App\SpaceFS.glsl" />

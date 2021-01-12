@@ -50,8 +50,15 @@ fragment_program BoyaFS glsl
         param_named InColor float4 0.61 0.61 .05 1.0 
         param_named OutColor float4 0.2 0.35 .15 1.0 
 
+        param_named_auto flipping render_target_flipping
+
     }
 }
+
+
+
+
+
 material IG2/spaceGLSL
 {
     technique
@@ -107,3 +114,4 @@ material IG2/boyaGLSL
         }
     }
 }
+

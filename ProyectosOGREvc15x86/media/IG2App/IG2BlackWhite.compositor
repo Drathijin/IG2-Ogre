@@ -1,0 +1,109 @@
+vertex_program RenderQuadVS glsl
+{
+    source ExampleVS.glsl
+    default_params
+    {
+        param_named_auto modelViewProjMat worldviewproj_matrix
+    }
+}
+fragment_program LuminancePS glsl
+{
+    source LuminancePS.glsl
+    default_params 
+    {
+        param_named RTT0 int 0 // textura con la escena
+    }
+}
+
+material IG2/LuminancePS
+{
+    technique {
+            pass {
+                depth_check off 
+                depth_write off
+                
+                vertex_program_ref RenderQuadVS {
+                }   
+                
+                fragment_program_ref LuminancePS {
+                }
+                texture_unit RTT0
+                {
+                    filtering none // tiene la resolución del viewport
+                }
+            }
+    }
+}
+compositor Luminance
+{
+    technique
+    {
+        texture RTT0 target_width target_height PF_R8G8B8A8
+
+        target RTT0
+        {
+            input previous
+        }
+        target_output
+        {
+            input none
+            pass render_quad
+            {
+                material IG2/LuminancePS
+                input 0 RTT0
+            }
+        }
+    }
+}
+
+fragment_program EdgeEmbossFS glsl
+{
+    source Kernel3x3PS.glsl
+    default_params 
+    {
+        param_named RTT0 int 0 // textura con la escena
+        param_named kernel float[9] 0 0 0 0 1 0 0 0 0 
+    }
+}
+
+material IG2/EdgeEmbossPS
+{
+    technique {
+            pass {
+                depth_check off 
+                depth_write off
+                
+                vertex_program_ref RenderQuadVS {
+                }   
+                
+                fragment_program_ref EdgeEmbossFS {
+                    param_named kernel float[9] -4 -2 0 -2 1 2 0 2 4
+                }
+                texture_unit RTT0
+                {
+                    filtering none // tiene la resolución del viewport
+                }
+            }
+    }
+}
+compositor EdgeEmboss
+{
+    technique
+    {
+        texture RTT0 target_width target_height PF_R8G8B8A8
+
+        target RTT0
+        {
+            input previous
+        }
+        target_output
+        {
+            input none
+            pass render_quad
+            {
+                material IG2/EdgeEmbossPS
+                input 0 RTT0
+            }
+        }
+    }
+}
