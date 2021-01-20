@@ -12,7 +12,7 @@ Boya::Boya(Nodo* parent)
 	: EntidadIG(parent->createChildSceneNode())
 {
 	ent = mSM->createEntity("uv_sphere.mesh");
-	ent->setMaterialName("IG2/ExplotaGLSL");
+	ent->setMaterialName("IG2/boyaGLSL");
 
 
 	float duration = 25.0f;
@@ -61,5 +61,17 @@ Boya::Boya(Nodo* parent)
 }
 void Boya::frameRendered(const Ogre::FrameEvent& evt)
 {
-	animationState->addTime(evt.timeSinceLastFrame);
-};
+	if(anim)
+		animationState->addTime(evt.timeSinceLastFrame);
+}
+bool Boya::keyPressed(const OgreBites::KeyboardEvent& evt)
+{
+	if (evt.keysym.sym == SDLK_r)
+	{
+		anim = !anim;
+		ent->setMaterialName(anim ? "IG2/boyaGLSL" : "IG2/ExplotaGLSL");
+		return true;
+	}
+	return false;
+}
+;

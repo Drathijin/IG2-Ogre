@@ -126,9 +126,9 @@ namespace OgreBites {
 		{
 			return mRoot->showConfigDialog(OgreBites::getNativeConfigDialog());
 		}
-		return mRoot->showConfigDialog(OgreBites::getNativeConfigDialog());
+		else return true; 
+		//return mRoot->showConfigDialog(OgreBites::getNativeConfigDialog());
 
-		//else return true; 
 	}
 	bool IG2ApplicationContext::initialiseRTShaderSystem()
 	{

@@ -65,6 +65,7 @@ geometry_program ExplotaGS glsl
     default_params
     {
         param_named_auto modelViewProjMat worldviewproj_matrix
+        param_named_auto time time
         
     }
 }
@@ -75,7 +76,7 @@ vertex_program ExplotaVS glsl
     {
         param_named_auto modelViewProjMat worldviewproj_matrix
         param_named_auto modelViewMat worldview_matrix
-        param_named_auto normalMat inverse_transpose_worldview_matrix
+        param_named_auto normalMat inverse_transpose_world_matrix
     }
 }
 fragment_program ExplotaFS glsl
@@ -85,6 +86,10 @@ fragment_program ExplotaFS glsl
     {
         param_named materialTex0 int 0;
         param_named materialTex1 int 1;
+        
+        param_named_auto flipping render_target_flipping
+        param_named_auto lightDiffuse light_diffuse_colour 0 //float3 0 1 0 
+        param_named_auto lightPosition light_position_view_space 0//float4 1000 1 0 0
     }
 }
 
@@ -94,15 +99,16 @@ material IG2/ExplotaGLSL{
             geometry_program_ref ExplotaGS {}
             vertex_program_ref ExplotaVS {}
             fragment_program_ref ExplotaFS{}
-            texture_unit
-            {
-                texture corrosion.jpg 2d
-                tex_address_mode wrap
-            }
+            
             
             texture_unit
             {
                 texture BumpyMetal.jpg 2d
+                tex_address_mode wrap
+            }
+            texture_unit
+            {
+                texture corrosion.jpg 2d
                 tex_address_mode wrap
             }
             cull_hardware none
