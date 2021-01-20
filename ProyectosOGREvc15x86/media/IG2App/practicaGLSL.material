@@ -56,8 +56,60 @@ fragment_program BoyaFS glsl
 }
 
 
+geometry_program ExplotaGS glsl
+{
+    source ExplotaGS.glsl
+    input_operation_type triangles
+    output_operation_type triangle_strip
+    max_output_vertices 3
+    default_params
+    {
+        param_named_auto modelViewProjMat worldviewproj_matrix
+        
+    }
+}
+vertex_program ExplotaVS glsl
+{
+    source ExplotaVS.glsl
+    default_params
+    {
+        param_named_auto modelViewProjMat worldviewproj_matrix
+        param_named_auto modelViewMat worldview_matrix
+        param_named_auto normalMat inverse_transpose_worldview_matrix
+    }
+}
+fragment_program ExplotaFS glsl
+{
+    source ExplotaFS.glsl
+    default_params
+    {
+        param_named materialTex0 int 0;
+        param_named materialTex1 int 1;
+    }
+}
 
-
+material IG2/ExplotaGLSL{
+    technique{
+        pass{
+            geometry_program_ref ExplotaGS {}
+            vertex_program_ref ExplotaVS {}
+            fragment_program_ref ExplotaFS{}
+            texture_unit
+            {
+                texture corrosion.jpg 2d
+                tex_address_mode wrap
+            }
+            
+            texture_unit
+            {
+                texture BumpyMetal.jpg 2d
+                tex_address_mode wrap
+            }
+            cull_hardware none
+            cull_software none
+        }
+    }
+}
 
 material IG2/spaceGLSL
 {
@@ -114,4 +166,3 @@ material IG2/boyaGLSL
         }
     }
 }
-

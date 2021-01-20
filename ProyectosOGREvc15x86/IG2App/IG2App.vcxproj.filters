@@ -119,5 +119,23 @@
     <None Include="..\media\IG2App\Kernel3x3PS.glsl">
       <Filter>Archivos de recursos</Filter>
     </None>
+    <None Include="..\media\IG2App\ExplotaGS.glsl">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="..\media\IG2App\ExplotaVS.glsl">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="..\media\IG2App\NormalesFS.glsl">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="..\media\IG2App\NormalesGS.glsl">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="..\media\IG2App\NormalesVS.glsl">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="..\media\IG2App\ExplotaFS.glsl">
+      <Filter>Archivos de recursos</Filter>
+    </None>
   </ItemGroup>
 </Project>

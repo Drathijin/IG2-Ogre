@@ -12,7 +12,7 @@ Boya::Boya(Nodo* parent)
 	: EntidadIG(parent->createChildSceneNode())
 {
 	ent = mSM->createEntity("uv_sphere.mesh");
-	ent->setMaterialName("IG2/boyaGLSL");
+	ent->setMaterialName("IG2/ExplotaGLSL");
 
 
 	float duration = 25.0f;
